@@ -1,5 +1,4 @@
 import when from 'when';
-import whenSequence from 'when/sequence';
 
 let
     openFiles = ['a.js', 'b.js', 'c.js'],

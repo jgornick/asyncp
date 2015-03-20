@@ -86,7 +86,7 @@ When.js ships with a concurrency limitation utility called guard.
 
 ```
 when.all(openFiles.map(guard(guard.n(2), saveFile)))
-    .then(() => {})
+    .then((results) => {})
     .catch((error) => {});
 ```
 
@@ -113,3 +113,30 @@ async.mapLimit(openFiles, 2, saveFile, function(err, results) {});
 ```
 
 Because the each\* implementations return results in the resolved promise, all map* methods map to each*.
+
+### filter(arr, iterator, callback)
+
+```
+async.filter(openFiles, exists, function(err, results) {});
+```
+
+#### Promise
+
+```
+Promise.all(openFiles.map(exists))
+    .then((results) => {
+        return openFiles
+            .map((file, index) => results[index] ? file : undefined)
+            .filter((file) => file != undefined);
+    })
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+#### When
+
+```
+when.filter(openFiles, exists)
+    .then((results) => {})
+    .catch((error) => {});
+```
