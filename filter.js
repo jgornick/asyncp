@@ -18,8 +18,8 @@ let
 Promise.all(openFiles.map(exists))
     .then((results) => {
         return openFiles
-            .map((file, index) => results[index] ? file : undefined)
-            .filter((file) => file != undefined);
+            .map((file, index) => results[index] ? file : '__remove__')
+            .filter((file) => file != '__remove__');
     })
     .then((...args) => {
         console.log('promise done', args);
