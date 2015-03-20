@@ -15,17 +15,15 @@ let
         });
     };
 
-let results = [];
 openFiles.reduce(
-    (promise, file) => {
-        return promise
-            .then(saveFile.bind(null, file))
+    (promise, file) => promise.then((results) => {
+        return saveFile(file)
             .then((result) => {
                 results.push(result);
                 return results;
             });
-    },
-    Promise.resolve()
+    }),
+    Promise.resolve([])
 )
     .then((...args) => {
         console.log('promise done', args);
