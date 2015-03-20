@@ -38,15 +38,14 @@ async.eachSeries(openFiles, saveFile, function(err) {});
 let results = [];
 
 openFiles.reduce(
-    (promise, file) => {
-        return promise
-            .then(saveFile.bind(null, file))
+    (promise, file) => promise.then((results) => {
+        return saveFile(file)
             .then((result) => {
                 results.push(result);
-                return Promise.resolve(results);
+                return results;
             });
-    },
-    Promise.resolve()
+    }),
+    Promise.resolve([])
 )
     .then((results) => {})
     .catch(error) => {});
@@ -54,14 +53,14 @@ openFiles.reduce(
 
 #### When
 
-When includes a utility called sequence that runs an array of tasks in order.
-
 ```
-whenSequence(openFiles.map((file) => {
-    return saveFile(file);
-}))
-    .then((results) => {})
-    .catch(error) => {});
+when.reduce(openFiles, (results, file) => {
+    return saveFile(file)
+        .then((result) => {
+                results.push(result);
+                return results;
+            });
+}, [])
 ```
 
 ### eachLimit(arr, limit, iterator, callback)
@@ -124,9 +123,7 @@ async.filter(openFiles, exists, function(err, results) {});
 
 ```
 Promise.all(openFiles.map(exists))
-    .then((results) => {
-        return openFiles.filter((file, index) => results[index]);
-    })
+    .then((results) => openFiles.filter((file, index) => results[index]))
     .then((results) => {})
     .catch((error) => {});
 ```
@@ -136,5 +133,139 @@ Promise.all(openFiles.map(exists))
 ```
 when.filter(openFiles, exists)
     .then((results) => {})
+    .catch((error) => {});
+```
+
+### filterSeries(arr, iterator, callback)
+
+```
+async.filterSeries(openFiles, exists, function(err, results) {});
+```
+
+#### Promise
+
+```
+openFiles.reduce(
+    (promise, file) => promise.then((results) => {
+        return exists(file)
+            .then((result) => {
+                if (result) {
+                    results.push(file);
+                }
+                return results;
+            });
+    }),
+    Promise.resolve([])
+)
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+#### When
+
+```
+when.reduce(openFiles, (results, file) => {
+    return exists(file)
+        .then((result) => {
+                if (result) {
+                    results.push(file);
+                }
+
+                return results;
+            });
+}, [])
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+### reject(arr, iterator, callback)
+
+```
+async.reject(openFiles, exists, function(err, results) {});
+```
+
+#### Promise
+
+```
+Promise.all(openFiles.map(exists))
+    .then((results) => openFiles.filter((file, index) => !results[index]))
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+#### When
+
+```
+when.filter(openFiles, (...args) => when(exists(...args), (result) => !result))
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+### rejectSeries(arr, iterator, callback)
+
+```
+async.rejectSeries(openFiles, exists, function(err, results) {});
+```
+
+#### Promise
+
+```
+openFiles.reduce(
+    (promise, file) => promise.then((results) => {
+        return exists(file)
+            .then((result) => {
+                if (!result) {
+                    results.push(file);
+                }
+                return results;
+            });
+    }),
+    Promise.resolve([])
+)
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+#### When
+
+```
+when.reduce(openFiles, (results, file) => {
+    return exists(file)
+        .then((result) => {
+                if (!result) {
+                    results.push(file);
+                }
+
+                return results;
+            });
+}, [])
+    .then((results) => {})
+    .catch((error) => {});
+```
+
+### reduce(arr, memo, iterator, callback)
+### reduceRight(arr, memo, iterator, callback)
+
+```
+async.reduce(openFiles, 0, inc, function(err, result) {});
+async.reduceRight(openFiles, 0, inc, function(err, result) {});
+```
+
+#### Promise
+
+```
+openFiles.reduce(
+    (promise, file) => promise.then((result) => inc(result, file)),
+    Promise.resolve(0)
+)
+    .then((result) => {})
+    .catch((error) => {});
+```
+
+#### When
+
+```
+when.reduce(openFiles, inc, 0)
+    .then((result) => {})
     .catch((error) => {});
 ```
