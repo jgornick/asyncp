@@ -15,21 +15,17 @@ let
         });
     };
 
-Promise.all(openFiles.map((file) => {
-    return saveFile(file);
-}))
-    .then(() => {
-        console.log('promise done');
+Promise.all(openFiles.map(saveFile))
+    .then((...args) => {
+        console.log('promise done', args);
     })
     .catch((error) => {
         console.log('promise error', error);
     });
 
-when.all(openFiles.map((file) => {
-    return saveFile(file);
-}))
-    .then(() => {
-        console.log('when done');
+when.all(openFiles.map(saveFile))
+    .then((...args) => {
+        console.log('when done', args);
     })
     .catch((error) => {
         console.log('when error', error);

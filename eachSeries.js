@@ -1,4 +1,5 @@
 import when from 'when';
+import whenSequence from 'when/sequence';
 
 let
     openFiles = ['a.js', 'b.js', 'c.js'],
@@ -15,30 +16,32 @@ let
         });
     };
 
-openFiles.reduce(
-    (promise, file) => {
-        console.log('reduce', file, promise);
-        return promise.then(saveFile.bind(null, file));
-    },
-    Promise.resolve()
-)
-    .then(() => {
-        console.log('done');
-    })
-    .catch((error) => {
-        console.log('error');
-    });
+let results = [];
 
 openFiles.reduce(
     (promise, file) => {
-        console.log('reduce', file, promise);
-        return promise.then(saveFile.bind(null, file));
+        return promise
+            .then(saveFile.bind(null, file))
+            .then((result) => {
+                results.push(result);
+                return Promise.resolve(results);
+            });
     },
-    when.resolve()
+    Promise.resolve()
 )
-    .then(() => {
-        console.log('done');
+    .then((...args) => {
+        console.log('promise done', args);
     })
     .catch((error) => {
-        console.log('error');
+        console.log('promise error', error);
+    });
+
+whenSequence(openFiles.map((file) => {
+    return saveFile.bind(null, file);
+}))
+    .then((...args) => {
+        console.log('when done', args);
+    })
+    .catch((error) => {
+        console.log('when error', error);
     });

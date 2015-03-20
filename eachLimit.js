@@ -17,19 +17,17 @@ let
         });
     };
 
-Promise.all(openFiles.map(throat(2, (file) => {
-    return saveFile(file);
-})))
-    .then(() => {
-        console.log('promise done');
+Promise.all(openFiles.map(throat(2, saveFile)))
+    .then((...args) => {
+        console.log('promise done', args);
     })
     .catch((error) => {
         console.log('promise error', error);
     });
 
-when.map(openFiles, guard(guard.n(2), saveFile))
-    .then(() => {
-        console.log('when done');
+when.all(openFiles.map(guard(guard.n(2), saveFile)))
+    .then((...args) => {
+        console.log('when done', args);
     })
     .catch((error) => {
         console.log('when error', error);

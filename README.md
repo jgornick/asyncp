@@ -13,18 +13,16 @@ async.each(openFiles, saveFile, function(err) {});
 #### Promise
 
 ```
-Promise.all(openFiles.map((file) => {
-    return saveFile(file);
-}))
-    .then(() => {})
+Promise.all(openFiles.map(saveFile))
+    .then((results) => {})
     .catch((error) => {});
 ```
 
 #### When
 
 ```
-when.map(openFiles, saveFile)
-    .then(() => {})
+when.all(openFiles.map(saveFile))
+    .then((results) => {})
     .catch((error) => {});
 ```
 
@@ -37,27 +35,32 @@ async.eachSeries(openFiles, saveFile, function(err) {});
 #### Promise
 
 ```
+let results = [];
+
 openFiles.reduce(
     (promise, file) => {
-        return promise.then(saveFile.bind(null, file));
+        return promise
+            .then(saveFile.bind(null, file))
+            .then((result) => {
+                results.push(result);
+                return Promise.resolve(results);
+            });
     },
     Promise.resolve()
 )
-    .then(() => {})
+    .then((results) => {})
     .catch(error) => {});
 ```
 
 #### When
 
+When includes a utility called sequence that runs an array of tasks in order.
+
 ```
-openFiles.reduce(
-    (promise, file) => {
-        console.log('reduce', file, promise);
-        return promise.then(saveFile.bind(null, file));
-    },
-    when.resolve()
-)
-    .then(() => {})
+whenSequence(openFiles.map((file) => {
+    return saveFile(file);
+}))
+    .then((results) => {})
     .catch(error) => {});
 ```
 
@@ -72,10 +75,8 @@ async.each(openFiles, 2, saveFile, function(err) {});
 In order to limit the number of concurrent tasks, we're using an external library called throat.
 
 ```
-Promise.all(openFiles.map(throat(2, (file) => {
-    return saveFile(file);
-})))
-    .then(() => {})
+Promise.all(openFiles.map(throat(2, saveFile)))
+    .then((results) => {})
     .catch((error) => {});
 ```
 
@@ -84,7 +85,7 @@ Promise.all(openFiles.map(throat(2, (file) => {
 When.js ships with a concurrency limitation utility called guard.
 
 ```
-when.map(openFiles, whenGuard(whenGuard(2), saveFile))
+when.all(openFiles.map(guard(guard.n(2), saveFile)))
     .then(() => {})
     .catch((error) => {});
 ```
