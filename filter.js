@@ -16,9 +16,7 @@ let
     };
 
 Promise.all(openFiles.map(exists))
-    .then((results) => {
-        return openFiles.filter((file, index) => results[index]);
-    })
+    .then((results) => openFiles.filter((file, index) => results[index]))
     .then((...args) => {
         console.log('promise done', args);
     })
