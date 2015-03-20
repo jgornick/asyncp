@@ -17,14 +17,13 @@ let
     };
 
 let results = [];
-
 openFiles.reduce(
     (promise, file) => {
         return promise
             .then(saveFile.bind(null, file))
             .then((result) => {
                 results.push(result);
-                return Promise.resolve(results);
+                return results;
             });
     },
     Promise.resolve()
@@ -36,9 +35,13 @@ openFiles.reduce(
         console.log('promise error', error);
     });
 
-whenSequence(openFiles.map((file) => {
-    return saveFile.bind(null, file);
-}))
+when.reduce(openFiles, (results, file) => {
+    return saveFile(file)
+        .then((result) => {
+                results.push(result);
+                return results;
+            });
+}, [])
     .then((...args) => {
         console.log('when done', args);
     })

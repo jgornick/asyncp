@@ -67,7 +67,7 @@ whenSequence(openFiles.map((file) => {
 ### eachLimit(arr, limit, iterator, callback)
 
 ```
-async.each(openFiles, 2, saveFile, function(err) {});
+async.eachLimit(openFiles, 2, saveFile, function(err) {});
 ```
 
 #### Promise
@@ -89,3 +89,27 @@ when.all(openFiles.map(guard(guard.n(2), saveFile)))
     .then(() => {})
     .catch((error) => {});
 ```
+
+### map(arr, iterator, callback)
+
+```
+async.map(openFiles, saveFile, function(err, results) {});
+```
+
+Because the each* implementations return results in the resolved promise, all map* methods map to each*.
+
+### mapSeries(arr, iterator, callback)
+
+```
+async.mapSeries(openFiles, saveFile, function(err, results) {});
+```
+
+Because the each* implementations return results in the resolved promise, all map* methods map to each*.
+
+### mapLimit(arr, iterator, callback)
+
+```
+async.mapLimit(openFiles, 2, saveFile, function(err, results) {});
+```
+
+Because the each\* implementations return results in the resolved promise, all map* methods map to each*.
