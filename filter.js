@@ -17,9 +17,7 @@ let
 
 Promise.all(openFiles.map(exists))
     .then((results) => {
-        return openFiles
-            .map((file, index) => results[index] ? file : '__remove__')
-            .filter((file) => file != '__remove__');
+        return openFiles.filter((file, index) => results[index]);
     })
     .then((...args) => {
         console.log('promise done', args);

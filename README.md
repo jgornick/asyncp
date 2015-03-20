@@ -125,9 +125,7 @@ async.filter(openFiles, exists, function(err, results) {});
 ```
 Promise.all(openFiles.map(exists))
     .then((results) => {
-        return openFiles
-            .map((file, index) => results[index] ? file : undefined)
-            .filter((file) => file != undefined);
+        return openFiles.filter((file, index) => results[index]);
     })
     .then((results) => {})
     .catch((error) => {});
