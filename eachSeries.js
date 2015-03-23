@@ -8,12 +8,50 @@ let
             setTimeout(
                 () => {
                     console.log('timeout', file);
-                    resolve(file);
+                    resolve(file == 'b.js' ? false : file);
                 },
                 2000
             );
         });
     };
+
+function eachSeries(collection, iterator) {
+    const
+        BREAK = '__break__';
+
+    let
+        results = [];
+
+    return collection.reduce(
+        (promise, item) => promise.then((results) => {
+            return iterator(item)
+                .then((result) => {
+                    if (result === false) {
+                        return Promise.reject(BREAK);
+                    }
+
+                    results.push(result);
+                    return results;
+                });
+        }),
+        Promise.resolve(results)
+    )
+        .catch((error) => {
+            if (error == BREAK) {
+                return Promise.resolve(results);
+            }
+
+            return Promise.reject(error);
+        });
+};
+
+eachSeries(openFiles, saveFile)
+    .then((...args) => {
+        console.log('eachSeries done', args);
+    })
+    .catch((error) => {
+        console.log('eachSeries error', error);
+    });
 
 openFiles.reduce(
     (promise, file) => promise.then((results) => {
