@@ -348,3 +348,31 @@ detectSeries(openFiles, exists)
         console.log('detect error', error);
     });
 ```
+
+### sortBy(arr, iterator, callback)
+
+```
+async.sortBy(openFiles, stat, function(error, results) {});
+```
+
+#### Promise
+
+```
+function sortBy(collection, iterator, sorter) {
+    if (sorter == null) {
+        sorter = (a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
+    }
+
+    return Promise
+        .all(collection.map((item) => iterator(item).then((result) => [result, item])))
+        .then((collection) => collection.sort(sorter).map((item) => item[1]));
+}
+
+sortBy(openFiles, stat)
+    .then((...args) => {
+        console.log('promise done', args);
+    })
+    .catch((error) => {
+        console.log('promise error', error);
+    });
+```
