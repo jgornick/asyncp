@@ -1,4 +1,5 @@
 import when from 'when';
+import PromiseBreak from './promise-break.js';
 
 let
     openFiles = ['a.js', 'b.js', 'c.js'],
@@ -16,9 +17,6 @@ let
     };
 
 function eachSeries(collection, iterator) {
-    const
-        BREAK = '__break__';
-
     let
         results = [];
 
@@ -27,7 +25,7 @@ function eachSeries(collection, iterator) {
             return iterator(item)
                 .then((result) => {
                     if (result === false) {
-                        return Promise.reject(BREAK);
+                        return Promise.reject(new PromiseBreak());
                     }
 
                     results.push(result);
@@ -37,7 +35,7 @@ function eachSeries(collection, iterator) {
         Promise.resolve(results)
     )
         .catch((error) => {
-            if (error == BREAK) {
+            if (error) {
                 return Promise.resolve(results);
             }
 

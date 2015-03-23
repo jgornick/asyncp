@@ -269,3 +269,82 @@ when.reduce(openFiles, inc, 0)
     .then((result) => {})
     .catch((error) => {});
 ```
+
+### detect(arr, iterator, callback)
+
+```
+async.detect(openFiles, exists, function(result) {});
+```
+
+#### Promise
+
+```
+function detect(collection, predicate) {
+    return Promise.all(collection.map((item, index) => {
+        return predicate(item, index)
+            .then((result) => {
+                if (result === true) {
+                    return Promise.reject(new PromiseBreak(item));
+                }
+                return result;
+            });
+    }))
+        .then(() => Promise.resolve(null))
+        .catch((error) => {
+            if (error instanceof PromiseBreak) {
+                return Promise.resolve(error.value);
+            }
+
+            return Promise.reject(error);
+        });
+}
+
+detect(openFiles, exists)
+    .then((...args) => {
+        console.log('detect done', args);
+    })
+    .catch((error) => {
+        console.log('detect error', error);
+    });
+```
+
+### detectSeries(arr, iterator, callback)
+
+```
+async.detectSeries(openFiles, exists, function(result) {});
+```
+
+#### Promise
+
+```
+function detectSeries(collection, predicate) {
+    return collection.reduce(
+        (promise, item) => promise.then((results) => {
+            return predicate(item)
+                .then((result) => {
+                    if (result === true) {
+                        return Promise.reject(new PromiseBreak(item));
+                    }
+                    return results;
+                });
+        }),
+        Promise.resolve(null)
+    )
+        .then((results) => Promise.resolve(null))
+        .catch((error) => {
+            if (error instanceof PromiseBreak) {
+                return Promise.resolve(error.value);
+            }
+
+            return Promise.reject(error);
+        });
+}
+
+detectSeries(openFiles, exists)
+    .then((...args) => {
+        console.log('detect done', args);
+    })
+    .catch((error) => {
+        console.log('detect error', error);
+    });
+```
