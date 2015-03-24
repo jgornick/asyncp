@@ -153,7 +153,7 @@ export function detect(collection, predicate) {
                 return result;
             });
     }))
-        .then(() => Promise.resolve(null))
+        .then(() => Promise.resolve(undefined))
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
@@ -163,8 +163,8 @@ export function detect(collection, predicate) {
 };
 
 export function detectSeries(collection, predicate) {
-    return collection.reduce(detectSeriesReducer(predicate), Promise.resolve(null))
-        .then(() => Promise.resolve(null))
+    return collection.reduce(detectSeriesReducer(predicate), Promise.resolve())
+        .then(() => Promise.resolve(undefined))
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
