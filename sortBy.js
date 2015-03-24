@@ -1,43 +1,16 @@
 import when from 'when';
+import * as mock from './mock';
+import * as async from './async';
 
-let
-    openFiles = ['a.js', 'b.js', 'c.js'],
-    stat = (file) => {
-        console.log('stat', file);
-        return when.promise((resolve, reject) => {
-            let timeout = Math.floor(Math.random() * (5000 - 1000) + 1000);
-            setTimeout(
-                () => {
-                    console.log('timeout', file, timeout);
-                    resolve(+new Date);
-                },
-                timeout
-            );
-        });
-    };
+let stat = mock.delayPredicate(
+    'stat',
+    (item, timeout, resolve) => resolve(+new Date)
+);
 
-function sortBy(collection, iterator, sorter) {
-    if (sorter == null) {
-        sorter = (a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
-    }
+async.sortBy(mock.files, stat)
+    .then((...args) => console.log('async.sortBy done', args))
+    .catch((error) => console.log('async.sortBy error', error));
 
-    return Promise
-        .all(collection.map((item) => iterator(item).then((result) => [result, item])))
-        .then((collection) => collection.sort(sorter).map((item) => item[1]));
-}
-
-sortBy(openFiles, stat)
-    .then((...args) => {
-        console.log('promise done', args);
-    })
-    .catch((error) => {
-        console.log('promise error', error);
-    });
-
-sortBy(openFiles, stat, (a, b) => a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0)
-    .then((...args) => {
-        console.log('promise done', args);
-    })
-    .catch((error) => {
-        console.log('promise error', error);
-    });
+async.sortBy(mock.files, stat, (a, b) => a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0)
+    .then((...args) => console.log('async.sortBy desc done', args))
+    .catch((error) => console.log('async.sortBy desc error', error));

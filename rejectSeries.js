@@ -1,53 +1,11 @@
-import when from 'when';
-import guard from 'when/guard';
+import * as mock from './mock';
+import * as async from './async';
 
-let
-    openFiles = ['a.js', 'b.js', 'c.js'],
-    exists = (file) => {
-        console.log('exits', file);
-        return when.promise((resolve, reject) => {
-            setTimeout(
-                () => {
-                    console.log('timeout', file);
-                    resolve(file == 'b.js');
-                },
-                2000
-            );
-        });
-    };
+let predicate = mock.delayPredicate(
+    'exists',
+    (item, timeout, resolve) => resolve(item == 'b.js')
+);
 
-openFiles.reduce(
-    (promise, file) => promise.then((results) => {
-        return exists(file)
-            .then((result) => {
-                if (!result) {
-                    results.push(file);
-                }
-                return results;
-            });
-    }),
-    Promise.resolve([])
-)
-    .then((...args) => {
-        console.log('promise done', args);
-    })
-    .catch((error) => {
-        console.log('promise error', error);
-    });
-
-when.reduce(openFiles, (results, file) => {
-    return exists(file)
-        .then((result) => {
-                if (!result) {
-                    results.push(file);
-                }
-
-                return results;
-            });
-}, [])
-    .then((...args) => {
-        console.log('when done', args);
-    })
-    .catch((error) => {
-        console.log('when error', error);
-    });
+async.rejectSeries(mock.files, predicate)
+    .then((...args) => console.log('async.rejectSeries done', args))
+    .catch((error) => console.log('async.rejectSeries error', error));

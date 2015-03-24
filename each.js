@@ -1,32 +1,6 @@
-import when from 'when';
+import * as mock from './mock';
+import * as async from './async';
 
-let
-    openFiles = ['a.js', 'b.js', 'c.js'],
-    saveFile = (file) => {
-        console.log('saveFile', file);
-        return when.promise((resolve, reject) => {
-            setTimeout(
-                () => {
-                    console.log('timeout', file);
-                    resolve(file);
-                },
-                2000
-            );
-        });
-    };
-
-Promise.all(openFiles.map(saveFile))
-    .then((...args) => {
-        console.log('promise done', args);
-    })
-    .catch((error) => {
-        console.log('promise error', error);
-    });
-
-when.all(openFiles.map(saveFile))
-    .then((...args) => {
-        console.log('when done', args);
-    })
-    .catch((error) => {
-        console.log('when error', error);
-    });
+async.each(mock.files, mock.mapSaveFile)
+    .then((...args) => console.log('async.each done', args))
+    .catch((error) => console.log('async.each error', error));
