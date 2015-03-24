@@ -143,7 +143,7 @@ export function reduceRight(collection, result, iterator) {
     );
 };
 
-export function detect(collection, predicate) {
+export function detect(collection, predicate, notFound = undefined) {
     return Promise.all(collection.map((item, index, collection) => {
         return predicate(item, index, collection)
             .then((result) => {
@@ -153,7 +153,7 @@ export function detect(collection, predicate) {
                 return result;
             });
     }))
-        .then(() => Promise.resolve(undefined))
+        .then(() => Promise.resolve(notFound))
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
@@ -162,9 +162,9 @@ export function detect(collection, predicate) {
         });
 };
 
-export function detectSeries(collection, predicate) {
+export function detectSeries(collection, predicate, notFound = undefined) {
     return collection.reduce(detectSeriesReducer(predicate), Promise.resolve())
-        .then(() => Promise.resolve(undefined))
+        .then(() => Promise.resolve(notFound))
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);

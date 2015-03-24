@@ -15,6 +15,6 @@ async.detectSeries(mock.files, exists)
     .then((...args) => console.log('async.detectSeries done', args))
     .catch((error) => console.log('async.detectSeries error', error));
 
-async.detectSeries(mock.files, notExists)
+async.detectSeries(mock.files, notExists, 'foo')
     .then((...args) => console.log('async.detectSeries notExists done', args))
     .catch((error) => console.log('async.detectSeries notExists error', error));

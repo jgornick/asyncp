@@ -16,6 +16,6 @@ async.detect(mock.files, exists)
     .then((...args) => console.log('async.detect done', args))
     .catch((error) => console.log('async.detect error', error));
 
-async.detect(mock.files, notExists)
+async.detect(mock.files, notExists, 'foo')
     .then((...args) => console.log('async.detect notExists done', args))
     .catch((error) => console.log('async.detect notExists error', error));
