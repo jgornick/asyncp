@@ -248,3 +248,51 @@ export function concatSeries(collection, iterator) {
         Promise.resolve([])
     )
 };
+
+export function series(tasks) {
+    return tasks.reduce(
+        (promise, task) => promise.then((results) => {
+            return task()
+                .then((result) => {
+                    results.push(result);
+                    return results;
+                });
+        }),
+        Promise.resolve([])
+    );
+};
+
+export function parallel(tasks) {
+    return Promise.all(tasks.map((task) => task()));
+};
+
+export function parallelLimit(tasks, limit) {
+    return Promise.all(tasks.map(throat(limit, (task) => task())));
+};
+
+export function whilst(condition, task) {
+    return condition()
+        .then((conditionResult) => {
+            return conditionResult
+                ? task().then(() => whilst(condition, task))
+                : Promise.resolve();
+        });
+};
+
+export function doWhilst(task, condition) {
+    return task().then(() => whilst(condition, task));
+};
+
+
+export function until(condition, task) {
+    return condition()
+        .then((conditionResult) => {
+            return conditionResult
+                ? Promise.resolve()
+                : task().then(() => until(condition, task));
+        });
+};
+
+export function doUntil(task, condition) {
+    return task().then(() => until(condition, task));
+};
