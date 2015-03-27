@@ -1,5 +1,6 @@
 import throat from 'throat';
 import PromiseBreak from './promise-break';
+import WaterfallError from './waterfall-error';
 
 function generateReducer(callback, callbackThen) {
     return (promise, item, index, collection) => {
@@ -299,4 +300,25 @@ export function doUntil(task, condition) {
 
 export function forever(task, ...args) {
     return task(...args).then((...results) => forever(task, ...results));
+};
+
+export function waterfall(tasks) {
+    let
+        results = [];
+
+    return tasks.reduce(
+        (promise, task) => promise.then((promiseResults) => {
+            return Promise.resolve(task(...promiseResults))
+                .then((taskResults) => {
+                    return results = taskResults;
+                });
+        }),
+        Promise.resolve(results)
+    )
+        .catch((error) => {
+            let waterfallError = new WaterfallError();
+            waterfallError.message = error.message;
+            waterfallError.results = results;
+            throw waterfallError;
+        });
 };
