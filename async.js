@@ -296,3 +296,7 @@ export function until(condition, task) {
 export function doUntil(task, condition) {
     return task().then(() => until(condition, task));
 };
+
+export function forever(task, ...args) {
+    return task(...args).then((...results) => forever(task, ...results));
+};
