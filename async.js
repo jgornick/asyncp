@@ -5,7 +5,7 @@ import WaterfallError from './waterfall-error';
 function generateReducer(callback, callbackThen) {
     return (promise, item, index, collection) => {
         return promise.then((results) => {
-            return callback(item, index, collection)
+            return Promise.resolve(callback(item, index, collection))
                 .then((result) => callbackThen(results, result, item, index, collection));
         });
     };
@@ -61,7 +61,7 @@ function rejectSeriesReducer(iterator) {
 function detectSeriesReducer(predicate) {
     return (promise, item, index, collection) => {
         return promise.then((results) => {
-            return predicate(item, index, collection)
+            return Promise.resolve(predicate(item, index, collection))
                 .then((result) => {
                     if (result === true) {
                         return Promise.reject(new PromiseBreak(item));
@@ -86,9 +86,9 @@ export function eachSeries(collection, iterator) {
         .reduce(eachSeriesReducer(iterator), Promise.resolve(results))
         .catch((error) => {
             if (error instanceof PromiseBreak) {
-                return Promise.resolve(results, error.value);
+                return Promise.resolve(results);
             }
-            return Promise.reject(error);
+            throw error;
         });
 };
 
@@ -146,7 +146,7 @@ export function reduceRight(collection, result, iterator) {
 
 export function detect(collection, predicate, notFound = undefined) {
     return Promise.all(collection.map((item, index, collection) => {
-        return predicate(item, index, collection)
+        return Promise.resolve(predicate(item, index, collection))
             .then((result) => {
                 if (result === true) {
                     return Promise.reject(new PromiseBreak(item));
@@ -154,23 +154,23 @@ export function detect(collection, predicate, notFound = undefined) {
                 return result;
             });
     }))
-        .then(() => Promise.resolve(notFound))
+        .then(() => notFound)
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
             }
-            return Promise.reject(error);
+            throw error;
         });
 };
 
 export function detectSeries(collection, predicate, notFound = undefined) {
     return collection.reduce(detectSeriesReducer(predicate), Promise.resolve())
-        .then(() => Promise.resolve(notFound))
+        .then(() => notFound)
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
             }
-            return Promise.reject(error);
+            throw error;
         });
 };
 
@@ -182,7 +182,7 @@ export function sortBy(collection, iterator, sorter) {
     return Promise
         .all(collection.map(
             (item, index, collection) => {
-                return iterator(item, index, collection)
+                return Promise.resolve(iterator(item, index, collection))
                     .then((result) => [result, item]);
             }
         ))
@@ -191,7 +191,7 @@ export function sortBy(collection, iterator, sorter) {
 
 export function some(collection, predicate) {
     return Promise.all(collection.map((item, index, collection) => {
-        return predicate(item, index, collection)
+        return Promise.resolve(predicate(item, index, collection))
             .then((result) => {
                 if (result === true) {
                     return Promise.reject(new PromiseBreak(true));
@@ -199,18 +199,18 @@ export function some(collection, predicate) {
                 return result;
             });
     }))
-        .then(() => Promise.resolve(false))
+        .then(() => false)
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
             }
-            return Promise.reject(error);
+            throw error;
         });
 };
 
 export function every(collection, predicate) {
     return Promise.all(collection.map((item, index, collection) => {
-        return predicate(item, index, collection)
+        return Promise.resolve(predicate(item, index, collection))
             .then((result) => {
                 if (result === false) {
                     return Promise.reject(new PromiseBreak(false));
@@ -218,12 +218,12 @@ export function every(collection, predicate) {
                 return result;
             });
     }))
-        .then(() => Promise.resolve(true))
+        .then(() => true)
         .catch((error) => {
             if (error instanceof PromiseBreak) {
                 return Promise.resolve(error.value);
             }
-            return Promise.reject(error);
+            throw error;
         });
 };
 
@@ -232,7 +232,7 @@ export function concat(collection, iterator) {
         results = [];
 
     return Promise.all(collection.map((item, index, collection) => {
-        return iterator(item, index, collection).then((result) => results.push(...result));
+        return Promise.resolve(iterator(item, index, collection)).then((result) => results.push(...result));
     }))
         .then(() => results);
 };
@@ -240,7 +240,7 @@ export function concat(collection, iterator) {
 export function concatSeries(collection, iterator) {
     return collection.reduce(
         (promise, item) => promise.then((results) => {
-            return iterator(item)
+            return Promise.resolve(iterator(item))
                 .then((result) => {
                     results.push(...result);
                     return results;
@@ -253,7 +253,7 @@ export function concatSeries(collection, iterator) {
 export function series(tasks) {
     return tasks.reduce(
         (promise, task) => promise.then((results) => {
-            return task()
+            return Promise.resolve(task())
                 .then((result) => {
                     results.push(result);
                     return results;
@@ -272,34 +272,34 @@ export function parallelLimit(tasks, limit) {
 };
 
 export function whilst(condition, task) {
-    return condition()
+    return Promise.resolve(condition())
         .then((conditionResult) => {
             return conditionResult
-                ? task().then(() => whilst(condition, task))
+                ? Promise.resolve(task()).then(() => whilst(condition, task))
                 : Promise.resolve();
         });
 };
 
 export function doWhilst(task, condition) {
-    return task().then(() => whilst(condition, task));
+    return Promise.resolve(task()).then(() => whilst(condition, task));
 };
 
 
 export function until(condition, task) {
-    return condition()
+    return Promise.resolve(condition())
         .then((conditionResult) => {
             return conditionResult
                 ? Promise.resolve()
-                : task().then(() => until(condition, task));
+                : Promise.resolve(task()).then(() => until(condition, task));
         });
 };
 
 export function doUntil(task, condition) {
-    return task().then(() => until(condition, task));
+    return Promise.resolve(task()).then(() => until(condition, task));
 };
 
 export function forever(task, ...args) {
-    return task(...args).then((...results) => forever(task, ...results));
+    return Promise.resolve(task(...args)).then((...results) => forever(task, ...results));
 };
 
 export function waterfall(tasks) {
