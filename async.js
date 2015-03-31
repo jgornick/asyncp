@@ -319,7 +319,9 @@ export function waterfall(tasks, ...args) {
         (promise, task) => promise.then((promiseResults) => {
             return promiseTry(task, ...promiseResults)
                 .then((taskResults) => {
-                    return results = taskResults;
+                    return results = Array.isArray(taskResults)
+                        ? taskResults
+                        : [taskResults];
                 });
         }),
         Promise.resolve(args)
