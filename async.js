@@ -2,6 +2,14 @@ import throat from 'throat';
 import PromiseBreak from './promise-break';
 import WaterfallError from './waterfall-error';
 
+function promiseTry(fn, ...args) {
+    try {
+        return Promise.resolve(fn(...args));
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
 function generateReducer(callback, callbackThen) {
     return (promise, item, index, collection) => {
         return promise.then((results) => {
@@ -146,7 +154,7 @@ export function reduceRight(collection, result, iterator) {
 
 export function detect(collection, predicate, notFound = undefined) {
     return Promise.all(collection.map((item, index, collection) => {
-        return Promise.resolve(predicate(item, index, collection))
+        return promiseTry(predicate, item, index, collection)
             .then((result) => {
                 if (result === true) {
                     return Promise.reject(new PromiseBreak(item));
@@ -182,7 +190,7 @@ export function sortBy(collection, iterator, sorter) {
     return Promise
         .all(collection.map(
             (item, index, collection) => {
-                return Promise.resolve(iterator(item, index, collection))
+                return promiseTry(iterator, item, index, collection)
                     .then((result) => [result, item]);
             }
         ))
@@ -191,7 +199,7 @@ export function sortBy(collection, iterator, sorter) {
 
 export function some(collection, predicate) {
     return Promise.all(collection.map((item, index, collection) => {
-        return Promise.resolve(predicate(item, index, collection))
+        return promiseTry(predicate, item, index, collection)
             .then((result) => {
                 if (result === true) {
                     return Promise.reject(new PromiseBreak(true));
@@ -210,7 +218,7 @@ export function some(collection, predicate) {
 
 export function every(collection, predicate) {
     return Promise.all(collection.map((item, index, collection) => {
-        return Promise.resolve(predicate(item, index, collection))
+        return promiseTry(predicate, item, index, collection)
             .then((result) => {
                 if (result === false) {
                     return Promise.reject(new PromiseBreak(false));
@@ -232,7 +240,8 @@ export function concat(collection, iterator) {
         results = [];
 
     return Promise.all(collection.map((item, index, collection) => {
-        return Promise.resolve(iterator(item, index, collection)).then((result) => results.push(...result));
+        return promiseTry(iterator, item, index, collection)
+            .then((result) => results.push(...result));
     }))
         .then(() => results);
 };
@@ -240,7 +249,7 @@ export function concat(collection, iterator) {
 export function concatSeries(collection, iterator) {
     return collection.reduce(
         (promise, item) => promise.then((results) => {
-            return Promise.resolve(iterator(item))
+            return promiseTry(iterator, item)
                 .then((result) => {
                     results.push(...result);
                     return results;
@@ -253,7 +262,7 @@ export function concatSeries(collection, iterator) {
 export function series(tasks) {
     return tasks.reduce(
         (promise, task) => promise.then((results) => {
-            return Promise.resolve(task())
+            return promiseTry(task)
                 .then((result) => {
                     results.push(result);
                     return results;
@@ -272,34 +281,34 @@ export function parallelLimit(tasks, limit) {
 };
 
 export function whilst(condition, task) {
-    return Promise.resolve(condition())
+    return promiseTry(condition)
         .then((conditionResult) => {
             return conditionResult
-                ? Promise.resolve(task()).then(() => whilst(condition, task))
+                ? promiseTry(task).then(() => whilst(condition, task))
                 : Promise.resolve();
         });
 };
 
 export function doWhilst(task, condition) {
-    return Promise.resolve(task()).then(() => whilst(condition, task));
+    return promiseTry(task).then(() => whilst(condition, task));
 };
 
 
 export function until(condition, task) {
-    return Promise.resolve(condition())
+    return promiseTry(condition)
         .then((conditionResult) => {
             return conditionResult
                 ? Promise.resolve()
-                : Promise.resolve(task()).then(() => until(condition, task));
+                : promiseTry(task).then(() => until(condition, task));
         });
 };
 
 export function doUntil(task, condition) {
-    return Promise.resolve(task()).then(() => until(condition, task));
+    return promiseTry(task).then(() => until(condition, task));
 };
 
 export function forever(task, ...args) {
-    return Promise.resolve(task(...args)).then((...results) => forever(task, ...results));
+    return promiseTry(task, ...args).then((...results) => forever(task, ...results));
 };
 
 export function waterfall(tasks) {
@@ -308,7 +317,7 @@ export function waterfall(tasks) {
 
     return tasks.reduce(
         (promise, task) => promise.then((promiseResults) => {
-            return Promise.resolve(task(...promiseResults))
+            return promiseTry(task, ...promiseResults)
                 .then((taskResults) => {
                     return results = taskResults;
                 });
@@ -321,4 +330,32 @@ export function waterfall(tasks) {
             waterfallError.results = results;
             throw waterfallError;
         });
+};
+
+export function retry(times = 5, task, ...args) {
+    return new Array(times).fill(null)
+        .reduce(
+            (promise, item, index) => {
+                return promise.then(() => {
+                    return promiseTry(task, ...args)
+                        .then((result) => {
+                            throw new PromiseBreak(result);
+                        })
+                        .catch((error) => {
+                            if (index < (times - 1)) {
+                                return Promise.resolve();
+                            }
+
+                            throw error;
+                        });
+                });
+            },
+            Promise.resolve()
+        )
+            .catch((error) => {
+                if (error instanceof PromiseBreak) {
+                    return Promise.resolve(error.value);
+                }
+                throw error;
+            });
 };
