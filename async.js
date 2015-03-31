@@ -259,10 +259,10 @@ export function concatSeries(collection, iterator) {
     )
 };
 
-export function series(tasks) {
+export function series(tasks, ...args) {
     return tasks.reduce(
         (promise, task) => promise.then((results) => {
-            return promiseTry(task)
+            return promiseTry(task, ...args)
                 .then((result) => {
                     results.push(result);
                     return results;
@@ -272,46 +272,46 @@ export function series(tasks) {
     );
 };
 
-export function parallel(tasks) {
-    return Promise.all(tasks.map((task) => task()));
+export function parallel(tasks, ...args) {
+    return Promise.all(tasks.map((task) => promiseTry(task, ...args)));
 };
 
-export function parallelLimit(tasks, limit) {
-    return Promise.all(tasks.map(throat(limit, (task) => task())));
+export function parallelLimit(tasks, limit, ...args) {
+    return Promise.all(tasks.map(throat(limit, (task) => promiseTry(task, ...args))));
 };
 
-export function whilst(condition, task) {
+export function whilst(condition, task, ...args) {
     return promiseTry(condition)
         .then((conditionResult) => {
             return conditionResult
-                ? promiseTry(task).then(() => whilst(condition, task))
+                ? promiseTry(task, ...args).then(() => whilst(condition, task, ...args))
                 : Promise.resolve();
         });
 };
 
-export function doWhilst(task, condition) {
-    return promiseTry(task).then(() => whilst(condition, task));
+export function doWhilst(task, condition, ...args) {
+    return promiseTry(task, ...args).then(() => whilst(condition, task, ...args));
 };
 
 
-export function until(condition, task) {
+export function until(condition, task, ...args) {
     return promiseTry(condition)
         .then((conditionResult) => {
             return conditionResult
                 ? Promise.resolve()
-                : promiseTry(task).then(() => until(condition, task));
+                : promiseTry(task, ...args).then(() => until(condition, task, ...args));
         });
 };
 
-export function doUntil(task, condition) {
-    return promiseTry(task).then(() => until(condition, task));
+export function doUntil(task, condition, ...args) {
+    return promiseTry(task, ...args).then(() => until(condition, task));
 };
 
 export function forever(task, ...args) {
     return promiseTry(task, ...args).then((...results) => forever(task, ...results));
 };
 
-export function waterfall(tasks) {
+export function waterfall(tasks, ...args) {
     let
         results = [];
 
@@ -322,7 +322,7 @@ export function waterfall(tasks) {
                     return results = taskResults;
                 });
         }),
-        Promise.resolve(results)
+        Promise.resolve(args)
     )
         .catch((error) => {
             let waterfallError = new WaterfallError();
