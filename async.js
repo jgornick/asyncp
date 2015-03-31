@@ -359,3 +359,23 @@ export function retry(times = 5, task, ...args) {
                 throw error;
             });
 };
+
+export function times(n, callback, ...args) {
+    return Promise.all(new Array(n).fill(null).map((item, index) => promiseTry(callback, index, ...args)));
+};
+
+export function timesSeries(n, callback, ...args) {
+    return new Array(n).fill(null)
+        .reduce(
+            (promise, item, index) => {
+                return promise.then((results) => {
+                    return promiseTry(callback, index, ...args)
+                        .then((result) => {
+                            results.push(result);
+                            return results;
+                        });
+                });
+            },
+            Promise.resolve([])
+        );
+};
