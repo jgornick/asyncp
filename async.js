@@ -341,15 +341,11 @@ export function waterfall(tasks, ...args) {
 };
 
 export function compose(...tasks) {
-    return (...args) => {
-        return waterfall(tasks.reverse(), ...args);
-    };
+    return (...args) => waterfall(tasks.reverse(), ...args);
 };
 
 export function seq(...tasks) {
-    return (...args) => {
-        return waterfall(tasks, ...args);
-    };
+    return (...args) => waterfall(tasks, ...args);
 };
 
 export function retry(times = 5, task, ...args) {

@@ -6,7 +6,7 @@ function add1(n) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(n + 1);
-        }, 10);
+        }, 1000);
     });
 }
 
@@ -15,7 +15,7 @@ function mul3(n) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(n * 3);
-        }, 10);
+        }, 2000);
     });
 }
 
