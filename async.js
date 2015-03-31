@@ -2,14 +2,6 @@ import throat from 'throat';
 import PromiseBreak from './promise-break';
 import WaterfallError from './waterfall-error';
 
-function promiseTry(fn, ...args) {
-    try {
-        return Promise.resolve(fn(...args));
-    } catch (error) {
-        return Promise.reject(error);
-    }
-}
-
 function generateReducer(callback, callbackThen) {
     return (promise, item, index, collection) => {
         return promise.then((results) => {
@@ -81,6 +73,20 @@ function detectSeriesReducer(predicate) {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+export function tryFn(fn, ...args) {
+    try {
+        return Promise.resolve(fn(...args));
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export function liftFn(fn) {
+    return (...args) => {
+        return tryFn(fn, ...args);
+    };
+};
 
 export function each(collection, iterator) {
     return Promise.all(collection.map(iterator));
@@ -154,7 +160,7 @@ export function reduceRight(collection, result, iterator) {
 
 export function detect(collection, predicate, notFound = undefined) {
     return Promise.all(collection.map((item, index, collection) => {
-        return promiseTry(predicate, item, index, collection)
+        return tryFn(predicate, item, index, collection)
             .then((result) => {
                 if (result === true) {
                     return Promise.reject(new PromiseBreak(item));
@@ -190,7 +196,7 @@ export function sortBy(collection, iterator, sorter) {
     return Promise
         .all(collection.map(
             (item, index, collection) => {
-                return promiseTry(iterator, item, index, collection)
+                return tryFn(iterator, item, index, collection)
                     .then((result) => [result, item]);
             }
         ))
@@ -199,7 +205,7 @@ export function sortBy(collection, iterator, sorter) {
 
 export function some(collection, predicate) {
     return Promise.all(collection.map((item, index, collection) => {
-        return promiseTry(predicate, item, index, collection)
+        return tryFn(predicate, item, index, collection)
             .then((result) => {
                 if (result === true) {
                     return Promise.reject(new PromiseBreak(true));
@@ -218,7 +224,7 @@ export function some(collection, predicate) {
 
 export function every(collection, predicate) {
     return Promise.all(collection.map((item, index, collection) => {
-        return promiseTry(predicate, item, index, collection)
+        return tryFn(predicate, item, index, collection)
             .then((result) => {
                 if (result === false) {
                     return Promise.reject(new PromiseBreak(false));
@@ -240,7 +246,7 @@ export function concat(collection, iterator) {
         results = [];
 
     return Promise.all(collection.map((item, index, collection) => {
-        return promiseTry(iterator, item, index, collection)
+        return tryFn(iterator, item, index, collection)
             .then((result) => results.push(...result));
     }))
         .then(() => results);
@@ -249,7 +255,7 @@ export function concat(collection, iterator) {
 export function concatSeries(collection, iterator) {
     return collection.reduce(
         (promise, item) => promise.then((results) => {
-            return promiseTry(iterator, item)
+            return tryFn(iterator, item)
                 .then((result) => {
                     results.push(...result);
                     return results;
@@ -262,7 +268,7 @@ export function concatSeries(collection, iterator) {
 export function series(tasks, ...args) {
     return tasks.reduce(
         (promise, task) => promise.then((results) => {
-            return promiseTry(task, ...args)
+            return tryFn(task, ...args)
                 .then((result) => {
                     results.push(result);
                     return results;
@@ -273,42 +279,42 @@ export function series(tasks, ...args) {
 };
 
 export function parallel(tasks, ...args) {
-    return Promise.all(tasks.map((task) => promiseTry(task, ...args)));
+    return Promise.all(tasks.map((task) => tryFn(task, ...args)));
 };
 
 export function parallelLimit(tasks, limit, ...args) {
-    return Promise.all(tasks.map(throat(limit, (task) => promiseTry(task, ...args))));
+    return Promise.all(tasks.map(throat(limit, (task) => tryFn(task, ...args))));
 };
 
 export function whilst(condition, task, ...args) {
-    return promiseTry(condition)
+    return tryFn(condition)
         .then((conditionResult) => {
             return conditionResult
-                ? promiseTry(task, ...args).then(() => whilst(condition, task, ...args))
+                ? tryFn(task, ...args).then(() => whilst(condition, task, ...args))
                 : Promise.resolve();
         });
 };
 
 export function doWhilst(task, condition, ...args) {
-    return promiseTry(task, ...args).then(() => whilst(condition, task, ...args));
+    return tryFn(task, ...args).then(() => whilst(condition, task, ...args));
 };
 
 
 export function until(condition, task, ...args) {
-    return promiseTry(condition)
+    return tryFn(condition)
         .then((conditionResult) => {
             return conditionResult
                 ? Promise.resolve()
-                : promiseTry(task, ...args).then(() => until(condition, task, ...args));
+                : tryFn(task, ...args).then(() => until(condition, task, ...args));
         });
 };
 
 export function doUntil(task, condition, ...args) {
-    return promiseTry(task, ...args).then(() => until(condition, task));
+    return tryFn(task, ...args).then(() => until(condition, task));
 };
 
 export function forever(task, ...args) {
-    return promiseTry(task, ...args).then((...results) => forever(task, ...results));
+    return tryFn(task, ...args).then((...results) => forever(task, ...results));
 };
 
 export function waterfall(tasks, ...args) {
@@ -317,7 +323,7 @@ export function waterfall(tasks, ...args) {
 
     return tasks.reduce(
         (promise, task) => promise.then((promiseResults) => {
-            return promiseTry(task, ...promiseResults)
+            return tryFn(task, ...promiseResults)
                 .then((taskResults) => {
                     return results = Array.isArray(taskResults)
                         ? taskResults
@@ -351,7 +357,7 @@ export function retry(times = 5, task, ...args) {
         .reduce(
             (promise, item, index) => {
                 return promise.then(() => {
-                    return promiseTry(task, ...args)
+                    return tryFn(task, ...args)
                         .then((result) => {
                             throw new PromiseBreak(result);
                         })
@@ -375,7 +381,7 @@ export function retry(times = 5, task, ...args) {
 };
 
 export function times(n, callback, ...args) {
-    return Promise.all(new Array(n).fill(null).map((item, index) => promiseTry(callback, index, ...args)));
+    return Promise.all(new Array(n).fill(null).map((item, index) => tryFn(callback, index, ...args)));
 };
 
 export function timesSeries(n, callback, ...args) {
@@ -383,7 +389,7 @@ export function timesSeries(n, callback, ...args) {
         .reduce(
             (promise, item, index) => {
                 return promise.then((results) => {
-                    return promiseTry(callback, index, ...args)
+                    return tryFn(callback, index, ...args)
                         .then((result) => {
                             results.push(result);
                             return results;
