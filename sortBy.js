@@ -1,6 +1,6 @@
 import when from 'when';
 import * as mock from './mock';
-import * as async from './async';
+import async from './async';
 
 let stat = mock.delayPredicate(
     'stat',

@@ -1,5 +1,5 @@
 import * as mock from './mock';
-import * as async from './async';
+import async from './async';
 
 function add1(n) {
     console.log('add1', n);

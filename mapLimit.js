@@ -2,7 +2,7 @@ import when from 'when';
 import guard from 'when/guard';
 
 import * as mock from './mock';
-import * as async from './async';
+import async from './async';
 
 async.mapLimit(mock.files, 2, mock.mapSaveFile)
     .then((...args) => console.log('async.mapLimit done', args))

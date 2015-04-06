@@ -1,5 +1,5 @@
 import * as mock from './mock';
-import * as async from './async';
+import async from './async';
 
 async.eachSeries(mock.files, mock.mapSaveFile)
     .then((...args) => console.log('async.eachSeries done', args))
