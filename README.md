@@ -1,25 +1,51 @@
-# Async.js to the Promise Land
+# async-p
 
-The following is an exercise that will translate the methods in the Async.js API to use Promises.
+> This library is not production ready simply beacuse there aren't tests, documentation and missing implementations.
 
-## Control flow methods not implemented
+Port of the async.js API to use Promises instead of callbacks.
 
-* applyEach(fns, args..., callback)
-    * This translates to async.parallel(fns, ...args)
-* applyEachSeries(fns, args..., callback)
-    * This translates to async.series(fns, ...args)
-* queue
-* priorityQueue
-* cargo
-* auto
-* iterator
-* apply
-* nextTick
+## Missing Implementations
 
-## Utils not implemented
+The following methods are missing from async-p due to use of Promises. However, some methods that are missing provide value and should be implemented. Contributions are welcome!
 
-* memoize
-* unmemoize
-* log
-* dir
-* noConflict
+### Collections
+
+* ```forEachOf```, ```forEachOfSeries```, ```forEachOfLimit```
+* ```filterLimit```
+* ```rejectLimit```
+* ```someLimit```
+* ```everyLimit```
+
+### Control Flow
+
+* ```during```, ```doDuring```
+* ```applyEach```, ```applyEachSeries```
+* ```queue```, ```priorityQueue```
+* ```cargo```
+* ```auto```
+* ```iterator```
+* ```timesLimit```
+
+### Utils
+
+* ```apply```
+* ```nextTick```
+* ```memoize```
+* ```unmemoize```
+* ```ensureAsync```
+* ```constant```
+* ```asyncify```
+* ```wrapSync```
+* ```log```
+* ```dir```
+* ```noConflict```
+
+## Credits
+
+Much thanks to [Brian Cavalier](https://github.com/briancavalier) and others in the #cujojs room on freenode!
+
+Also, thanks for [David Bushong](https://github.com/dbushong) for inspiration from his [async-q](https://github.com/dbushong/async-q) library.
+
+## License
+
+MIT.

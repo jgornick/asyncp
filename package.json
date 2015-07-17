@@ -1,15 +1,11 @@
 {
-  "name": "async-to-the-promise-land",
-  "version": "1.0.0",
-  "description": "",
-  "main": "eachSeries.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "async-p",
+  "version": "0.5",
+  "description": "Async.js for Promises",
+  "main": "src/async.js",
+  "author": "Joe Gornick",
+  "license": "MIT",
   "dependencies": {
-    "throat": "^2.0.2",
-    "when": "^3.7.2"
+    "throat": "^2.0.2"
   }
 }
