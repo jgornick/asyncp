@@ -11,6 +11,10 @@ export default function retry(times = 5, task, ...args) {
                             throw new PromiseBreak(result);
                         })
                         .catch((error) => {
+                            if (error instanceof PromiseBreak) {
+                                throw error;
+                            }
+
                             if (index < (times - 1)) {
                                 return Promise.resolve();
                             }
