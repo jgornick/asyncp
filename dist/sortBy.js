@@ -1,15 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports['default'] = sortBy;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.default = sortBy;
 
 var _tryFn = require('./tryFn');
 
 var _tryFn2 = _interopRequireDefault(_tryFn);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function sortBy(collection, iterator, sorter) {
     if (sorter == null) {
@@ -19,7 +19,7 @@ function sortBy(collection, iterator, sorter) {
     }
 
     return Promise.all(collection.map(function (item, index, collection) {
-        return (0, _tryFn2['default'])(iterator, item, index, collection).then(function (result) {
+        return (0, _tryFn2.default)(iterator, item, index, collection).then(function (result) {
             return [result, item];
         });
     })).then(function (collection) {
@@ -27,7 +27,4 @@ function sortBy(collection, iterator, sorter) {
             return item[1];
         });
     });
-}
-
-;
-module.exports = exports['default'];
+};

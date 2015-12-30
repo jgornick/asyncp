@@ -3,8 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports["default"] = filterSeries;
-
+exports.default = filterSeries;
 function filterSeries(collection, predicate) {
     return collection.reduce(function (promise, item, index, collection) {
         return promise.then(function (results) {
@@ -16,7 +15,4 @@ function filterSeries(collection, predicate) {
             });
         });
     }, Promise.resolve([]));
-}
-
-;
-module.exports = exports["default"];
+};

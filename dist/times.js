@@ -1,15 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports['default'] = times;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.default = times;
 
 var _tryFn = require('./tryFn');
 
 var _tryFn2 = _interopRequireDefault(_tryFn);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function times(n, callback) {
     for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -17,9 +17,6 @@ function times(n, callback) {
     }
 
     return Promise.all(new Array(n).fill(null).map(function (item, index) {
-        return _tryFn2['default'].apply(undefined, [callback, index].concat(args));
+        return _tryFn2.default.apply(undefined, [callback, index].concat(args));
     }));
-}
-
-;
-module.exports = exports['default'];
+};
