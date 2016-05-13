@@ -15,12 +15,11 @@ function detectSeries(collection, predicate) {
     var notFound = arguments.length <= 2 || arguments[2] === undefined ? undefined : arguments[2];
 
     return collection.reduce(function (promise, item, index, collection) {
-        return promise.then(function (results) {
-            return Promise.resolve(iterator(item, index, collection)).then(function (result) {
+        return promise.then(function () {
+            return Promise.resolve(predicate(item, index, collection)).then(function (result) {
                 if (result === true) {
                     return Promise.reject(new _promiseBreak2['default'](item));
                 }
-                return results;
             });
         });
     }, Promise.resolve()).then(function () {
