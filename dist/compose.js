@@ -1,15 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports['default'] = compose;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.default = compose;
 
 var _waterfall = require('./waterfall');
 
 var _waterfall2 = _interopRequireDefault(_waterfall);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function compose() {
     for (var _len = arguments.length, tasks = Array(_len), _key = 0; _key < _len; _key++) {
@@ -21,9 +21,6 @@ function compose() {
             args[_key2] = arguments[_key2];
         }
 
-        return _waterfall2['default'].apply(undefined, [tasks.reverse()].concat(args));
+        return _waterfall2.default.apply(undefined, [tasks.reverse()].concat(args));
     };
-}
-
-;
-module.exports = exports['default'];
+};

@@ -3,8 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports["default"] = rejectSeries;
-
+exports.default = rejectSeries;
 function rejectSeries(collection, predicate) {
     return collection.reduce(function (promise, item, index, collection) {
         return promise.then(function (results) {
@@ -16,7 +15,4 @@ function rejectSeries(collection, predicate) {
             });
         });
     }, Promise.resolve([]));
-}
-
-;
-module.exports = exports["default"];
+};

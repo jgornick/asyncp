@@ -1,19 +1,16 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports['default'] = map;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.default = map;
 
 var _each = require('./each');
 
 var _each2 = _interopRequireDefault(_each);
 
-function map(collection, iterator) {
-    return (0, _each2['default'])(collection, iterator);
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-;
-module.exports = exports['default'];
+function map(collection, iterator) {
+    return (0, _each2.default)(collection, iterator);
+};

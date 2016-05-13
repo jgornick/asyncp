@@ -1,10 +1,8 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _promiseBreak = require('./promiseBreak');
 
@@ -154,44 +152,45 @@ var _whilst = require('./whilst');
 
 var _whilst2 = _interopRequireDefault(_whilst);
 
-exports['default'] = {
-    PromiseBreak: _promiseBreak2['default'],
-    WaterfallError: _waterfallError2['default'],
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    compose: _compose2['default'],
-    concat: _concat2['default'],
-    concatSeries: _concatSeries2['default'],
-    detect: _detect2['default'],
-    detectSeries: _detectSeries2['default'],
-    doUntil: _doUntil2['default'],
-    doWhilst: _doWhilst2['default'],
-    each: _each2['default'],
-    eachLimit: _eachLimit2['default'],
-    eachSeries: _eachSeries2['default'],
-    every: _every2['default'],
-    filter: _filter2['default'],
-    filterSeries: _filterSeries2['default'],
-    forever: _forever2['default'],
-    liftFn: _liftFn2['default'],
-    map: _map2['default'],
-    mapSeries: _mapSeries2['default'],
-    mapSeriesLimit: _mapSeriesLimit2['default'],
-    parallel: _parallel2['default'],
-    parallelLimit: _parallelLimit2['default'],
-    reduce: _reduce2['default'],
-    reduceRight: _reduceRight2['default'],
-    reject: _reject2['default'],
-    rejectSeries: _rejectSeries2['default'],
-    retry: _retry2['default'],
-    seq: _seq2['default'],
-    series: _series2['default'],
-    some: _some2['default'],
-    sortBy: _sortBy2['default'],
-    times: _times2['default'],
-    timesSeries: _timesSeries2['default'],
-    tryFn: _tryFn2['default'],
-    until: _until2['default'],
-    waterfall: _waterfall2['default'],
-    whilst: _whilst2['default']
+exports.default = {
+    PromiseBreak: _promiseBreak2.default,
+    WaterfallError: _waterfallError2.default,
+
+    compose: _compose2.default,
+    concat: _concat2.default,
+    concatSeries: _concatSeries2.default,
+    detect: _detect2.default,
+    detectSeries: _detectSeries2.default,
+    doUntil: _doUntil2.default,
+    doWhilst: _doWhilst2.default,
+    each: _each2.default,
+    eachLimit: _eachLimit2.default,
+    eachSeries: _eachSeries2.default,
+    every: _every2.default,
+    filter: _filter2.default,
+    filterSeries: _filterSeries2.default,
+    forever: _forever2.default,
+    liftFn: _liftFn2.default,
+    map: _map2.default,
+    mapSeries: _mapSeries2.default,
+    mapSeriesLimit: _mapSeriesLimit2.default,
+    parallel: _parallel2.default,
+    parallelLimit: _parallelLimit2.default,
+    reduce: _reduce2.default,
+    reduceRight: _reduceRight2.default,
+    reject: _reject2.default,
+    rejectSeries: _rejectSeries2.default,
+    retry: _retry2.default,
+    seq: _seq2.default,
+    series: _series2.default,
+    some: _some2.default,
+    sortBy: _sortBy2.default,
+    times: _times2.default,
+    timesSeries: _timesSeries2.default,
+    tryFn: _tryFn2.default,
+    until: _until2.default,
+    waterfall: _waterfall2.default,
+    whilst: _whilst2.default
 };
-module.exports = exports['default'];
