@@ -1,3 +1,3 @@
-export default function each(collection, iterator) {
-    return Promise.all(collection.map(iterator));
+export default function each(collection, iteratee) {
+    return Promise.all(collection.map(iteratee));
 };

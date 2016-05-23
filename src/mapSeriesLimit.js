@@ -1,5 +1,5 @@
 import eachLimit from './eachLimit';
 
-export default function mapSeriesLimit(collection, iterator) {
-    return eachLimit(collection, iterator);
+export default function mapSeriesLimit(collection, iteratee) {
+    return eachLimit(collection, iteratee);
 };

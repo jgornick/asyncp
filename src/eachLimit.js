@@ -1,5 +1,5 @@
 import throat from 'throat';
 
-export default function eachLimit(collection, limit, iterator) {
-    return Promise.all(collection.map(throat(limit, iterator)));
+export default function eachLimit(collection, limit, iteratee) {
+    return Promise.all(collection.map(throat(limit, iteratee)));
 };

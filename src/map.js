@@ -1,5 +1,5 @@
 import each from './each';
 
-export default function map(collection, iterator) {
-    return each(collection, iterator);
+export default function map(collection, iteratee) {
+    return each(collection, iteratee);
 };
