@@ -10,35 +10,32 @@ The following methods are missing from async-p due to use of Promises. However, 
 
 ### Collections
 
-* ```forEachOf```, ```forEachOfSeries```, ```forEachOfLimit```
-* ```filterLimit```
-* ```rejectLimit```
-* ```someLimit```
-* ```everyLimit```
+* ```transform```
 
 ### Control Flow
 
-* ```during```, ```doDuring```
-* ```applyEach```, ```applyEachSeries```
-* ```queue```, ```priorityQueue```
+* ```queue```
+* ```priorityQueue```
 * ```cargo```
 * ```auto```
-* ```iterator```
-* ```timesLimit```
+* ```autoInject```
+* ```iterator``` => Use generators.
 
 ### Utils
 
-* ```apply```
+* ```apply``` => Use native function.apply.
+* ```race``` => Use Promise.race.
 * ```nextTick```
-* ```memoize```
+* ```memoize``` => A Promise can only be resolved once which means the result is already cached. Alternatively, use lodash#memoize.
 * ```unmemoize```
 * ```ensureAsync```
-* ```constant```
+* ```constant``` => Alternatively, use lodash#constant.
 * ```asyncify```
-* ```wrapSync```
 * ```log```
 * ```dir```
 * ```noConflict```
+* ```reflect```
+* ```reflectAll```
 
 ## Credits
 

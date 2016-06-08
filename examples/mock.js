@@ -6,13 +6,14 @@ export function getTimeout(min, max) {
 
 export var dirs = ['/a', '/b', '/c'];
 export var files = ['a.js', 'b.js', 'c.js'];
+export var object = { foo: 'a.js', bar: 'b.js', baz: 'c.js' };
 
 export function generateDelay(name, onTimeout) {
-    return (item) => {
+    return (value, key, collection) => {
         return new Promise((resolve, reject) => {
             let timeout = getTimeout(1, 5);
-            console.log(name, item, timeout);
-            setTimeout(() => onTimeout(item, timeout, resolve, reject), timeout);
+            console.log(name, value, key, collection, timeout);
+            setTimeout(() => onTimeout(value, timeout, resolve, reject), timeout);
         });
     };
 };

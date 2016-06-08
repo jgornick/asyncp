@@ -4,11 +4,12 @@ export default function detectSeries(collection, predicate, notFound = undefined
     return collection.reduce(
         (promise, item, index, collection) => {
             return promise.then(() => {
-                return Promise.resolve(predicate(item, index, collection))
+                return tryFn(predicate ,item, index, collection)
                     .then((result) => {
                         if (result === true) {
                             return Promise.reject(new PromiseBreak(item));
                         }
+                        return promise;
                     });
             });
         },

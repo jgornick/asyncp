@@ -6,7 +6,7 @@ let
     countTimeout = 0;
 
 async.retry(
-    3,
+    { times: 3, interval: 2000 },
     () => {
         console.log('task', count);
         if (++count == 3) {
@@ -14,6 +14,16 @@ async.retry(
         } else {
             throw new Error(`Request failed ${count}`);
         }
+    }
+)
+    .then((...args) => console.log('async.retry done', args))
+    .catch((error) => console.log('async.retry error', error));
+
+async.retry(
+    { times: 3, interval: (retryCount) => retryCount * 1000 },
+    (results) => {
+        console.log('task', results.length);
+        throw new Error(`Request failed ${results.length}`);
     }
 )
     .then((...args) => console.log('async.retry done', args))

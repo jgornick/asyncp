@@ -1,21 +1,8 @@
-import tryFn from './tryFn';
-import PromiseBreak from './promiseBreak';
+import detect from './detect';
+
+const NOT_FOUND = '__ASYNCP_NOT_FOUND__';
 
 export default function some(collection, predicate) {
-    return Promise.all(collection.map((item, index, collection) => {
-        return tryFn(predicate, item, index, collection)
-            .then((result) => {
-                if (result === true) {
-                    return Promise.reject(new PromiseBreak(true));
-                }
-                return result;
-            });
-    }))
-        .then(() => false)
-        .catch((error) => {
-            if (error instanceof PromiseBreak) {
-                return Promise.resolve(error.value);
-            }
-            throw error;
-        });
+    return detect(collection, predicate, NOT_FOUND)
+        .then((result) => result !== NOT_FOUND);
 };
