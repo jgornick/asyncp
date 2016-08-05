@@ -1,5 +1,4 @@
 import async from '../src/async';
-import { idDelay, idPromise, idNative } from './helper'
 
 describe('concat', function() {
     it('concat, async', function() {
