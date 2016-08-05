@@ -4,7 +4,7 @@ export default class PromiseBreak {
     }
 
     set value(value) {
-        this._value;
+        this._value = value;
     }
 
     constructor(value) {

@@ -1,3 +1,4 @@
+import tryFn from './tryFn';
 import PromiseBreak from './promiseBreak';
 
 export default function detectSeries(collection, predicate, notFound = undefined) {
