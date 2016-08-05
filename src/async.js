@@ -66,6 +66,7 @@ export default {
     compose,
     concat,
     concatSeries,
+    delay,
     detect,
     detectLimit,
     detectSeries,
@@ -112,5 +113,18 @@ export default {
     tryFn,
     until,
     waterfall,
-    whilst
+    whilst,
+
+    // aliases
+    all: every,
+    any: some,
+    forEach: each,
+    forEachSeries: eachSeries,
+    forEachLimit: eachLimit,
+    inject: reduce,
+    foldl: reduce,
+    foldr: reduceRight,
+    select: filter,
+    selectLimit: filterLimit,
+    selectSeries: filterSeries
 };
