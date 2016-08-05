@@ -1,7 +1,7 @@
 import tryFn from './tryFn';
 import PromiseBreak from './promiseBreak';
 
-export default function forEachOfSeries(collection, iteratee) {
+export default function eachOfSeries(collection, iteratee) {
     return Object.keys(collection)
         .reduce(
             (promise, key, index, collection) => {
