@@ -5,61 +5,61 @@ import {
     iterateeNativeWithOrder
 } from './helper';
 
-describe('concat', function() {
+describe('concatSeries', function() {
     it('does delayed items', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateeDelayWithOrder(order, x => [x, x + 1]));
+        const p = async.concatSeries(arr, iterateeDelayWithOrder(order, x => [x, x + 1]));
         return Promise.all([
             p.should.eventually.deep.equal([1, 2, 3, 4, 2, 3]),
-            p.then(() => order.should.deep.equal([1, 2, 3]))
+            p.then(() => order.should.deep.equal(arr))
         ]);
     });
 
     it('does sync promise items', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateePromiseWithOrder(order, x => [x, x + 1]));
+        const p = async.concatSeries(arr, iterateePromiseWithOrder(order, x => [x, x + 1]));
         return Promise.all([
             p.should.eventually.deep.equal([1, 2, 3, 4, 2, 3]),
-            p.then(() => order.should.deep.equal([1, 3, 2]))
+            p.then(() => order.should.deep.equal(arr))
         ]);
     });
 
     it('does sync native items', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateeNativeWithOrder(order, x => [x, x + 1]));
+        const p = async.concatSeries(arr, iterateeNativeWithOrder(order, x => [x, x + 1]));
         return Promise.all([
             p.should.eventually.deep.equal([1, 2, 3, 4, 2, 3]),
-            p.then(() => order.should.deep.equal([1, 3, 2]))
+            p.then(() => order.should.deep.equal(arr))
         ]);
     });
 
     it('does sync native nested items', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateeNativeWithOrder(order, x => [x, [x + 1, x + 2]]));
+        const p = async.concatSeries(arr, iterateeNativeWithOrder(order, x => [x, [x + 1, x + 2]]));
         return Promise.all([
             p.should.eventually.deep.equal([1, [2, 3], 3, [4, 5], 2, [3, 4]]),
-            p.then(() => order.should.deep.equal([1, 3, 2]))
+            p.then(() => order.should.deep.equal(arr))
         ]);
     });
 
     it('does sync native non-array items', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateeNativeWithOrder(order, x => x + 1));
+        const p = async.concatSeries(arr, iterateeNativeWithOrder(order, x => x + 1));
         return Promise.all([
             p.should.eventually.deep.equal([2, 4, 3]),
-            p.then(() => order.should.deep.equal([1, 3, 2]))
+            p.then(() => order.should.deep.equal(arr))
         ]);
     });
 
     it('does mixed (delayed, promise, native) items', function() {
         let order = [];
         const arr = [3, 2, 1, 4, 5, 6, 9, 8, 7];
-        const p = async.concat(arr, value => {
+        const p = async.concatSeries(arr, value => {
             if (value >= 1 && value <= 3) {
                 return new Promise(resolve => setTimeout(
                     () => {
@@ -81,13 +81,13 @@ describe('concat', function() {
 
         return Promise.all([
             p.should.eventually.deep.equal([3, 4, 2, 3, 1, 2, 4, 5, 5, 6, 6, 7, 9, 10, 8, 9, 7, 8]),
-            p.then(() => order.should.deep.equal([4, 5, 6, 9, 8, 7, 1, 2, 3]))
+            p.then(() => order.should.deep.equal(arr))
         ]);
     });
 
     it('has right arguments', function() {
         const arr = [1, 3, 2];
-        return async.concat(arr, (value, index, collection) => {
+        return async.concatSeries(arr, (value, index, collection) => {
             switch (value) {
                 case 1:
                     index.should.equal(0, `index is invalid for value ${value}`);
@@ -107,7 +107,7 @@ describe('concat', function() {
     });
 
     it('supports empty collections', function() {
-        const p = async.concat([], () => assert(false, 'iteratee should not be called'));
+        const p = async.concatSeries([], () => assert(false, 'iteratee should not be called'));
 
         return Promise.all([
             p.should.eventually.have.length(0)
@@ -118,7 +118,7 @@ describe('concat', function() {
         let arr = [];
         arr.myProp = 'anything';
 
-        const p = async.concat(arr, () => assert(false, 'iteratee should not be called'));
+        const p = async.concatSeries(arr, () => assert(false, 'iteratee should not be called'));
 
         return Promise.all([
             p.should.eventually.have.length(0)
@@ -128,7 +128,7 @@ describe('concat', function() {
     it('supports external array modification with mixed (delayed, sync promise) items', function() {
         let order = [];
         let arr = [4, 3, 2, 1];
-        const p = async.concat(arr, (value, index, collection) => {
+        const p = async.concatSeries(arr, (value, index, collection) => {
             if (value >= 2 && value <= 3) {
                 return new Promise(resolve => {
                     setTimeout(
@@ -151,31 +151,14 @@ describe('concat', function() {
         return Promise.all([
             p.should.eventually.deep.equal([4, 5, 3, 4, 2, 3, 1, 2]),
             p.then(() => arr.should.deep.equal([3, 2])),
-            p.then(() => order.should.deep.equal([4, 1, 2, 3]))
+            p.then(() => order.should.deep.equal([4, 3, 2, 1]))
         ]);
     });
 
     it('rejects using delayed Promise.reject', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateeDelayWithOrder(
-            order,
-            (x) => x == 2 ? Promise.reject(new Error('error')) : x
-        ));
-
-        return Promise.all([
-            p.should.eventually.be.rejectedWith(Error),
-            new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([1, 2, 3])),
-                4 * 25
-            ))
-        ]);
-    });
-
-    it('rejects using sync Promise.reject', function() {
-        let order = [];
-        const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateePromiseWithOrder(
+        const p = async.concatSeries(arr, iterateeDelayWithOrder(
             order,
             (x) => x == 3 ? Promise.reject(new Error('error')) : x
         ));
@@ -183,7 +166,24 @@ describe('concat', function() {
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal(arr)),
+                () => resolve(order.should.deep.equal([1, 3])),
+                5 * 25
+            ))
+        ]);
+    });
+
+    it('rejects using sync Promise.reject', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const p = async.concatSeries(arr, iterateePromiseWithOrder(
+            order,
+            (x) => x == 3 ? Promise.reject(new Error('error')) : x
+        ));
+
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal([1, 3])),
                 25
             ))
         ]);
@@ -192,7 +192,7 @@ describe('concat', function() {
     it('rejects using sync throw', function() {
         let order = [];
         const arr = [1, 3, 2];
-        const p = async.concat(arr, iterateeNativeWithOrder(
+        const p = async.concatSeries(arr, iterateeNativeWithOrder(
             order,
             (x) => {
                 if (x == 3) {
@@ -205,7 +205,7 @@ describe('concat', function() {
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal(arr)),
+                () => resolve(order.should.deep.equal([1, 3])),
                 25
             ))
         ]);
