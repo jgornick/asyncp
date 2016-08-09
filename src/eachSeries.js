@@ -1,29 +1,16 @@
 import tryFn from './tryFn';
-import PromiseBreak from './promiseBreak';
 
 export default function eachSeries(collection, iteratee) {
-    let
-        results = [];
-
     return collection.reduce(
-        (promise, item, index, collection) => {
+        (promise, ...args) => {
             return promise.then((results) => {
-                return tryFn(iteratee, item, index, collection)
+                return tryFn(iteratee, ...args)
                     .then((result) => {
-                        if (result === false) {
-                            return Promise.reject(new PromiseBreak(item));
-                        }
                         results.push(result);
                         return results;
                     });
             });
         },
-        Promise.resolve(results)
-    )
-        .catch((error) => {
-            if (error instanceof PromiseBreak) {
-                return Promise.resolve(results);
-            }
-            throw error;
-        });
+        Promise.resolve([])
+    );
 };
