@@ -66,7 +66,7 @@ describe('concat', function() {
                         order.push(value);
                         resolve([value, value + 1])
                     },
-                    value * 100
+                    value * 25
                 ));
             } else if (value >= 4 && value <= 6) {
                 return new Promise(resolve => {
@@ -136,7 +136,7 @@ describe('concat', function() {
                             order.push(value);
                             resolve([value, value + 1]);
                         },
-                        value * 100
+                        value * 25
                     );
                 });
             } else {
