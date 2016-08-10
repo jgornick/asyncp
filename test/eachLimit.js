@@ -2,7 +2,6 @@ import async from '../src/async';
 import {
     iterateeDelayWithOrder,
     iterateePromiseWithOrder,
-    iterateeNative,
     iterateeNativeWithOrder
 } from './helper';
 
@@ -48,7 +47,7 @@ describe('eachLimit', function() {
                         order.push(value);
                         resolve(value)
                     },
-                    value * 100
+                    value * 25
                 ));
             } else if (value >= 4 && value <= 6) {
                 return new Promise(resolve => {
@@ -129,7 +128,7 @@ describe('eachLimit', function() {
         ]);
     });
 
-    it('resolves after sync array modification with mixed (delayed, sync promise) items', function() {
+    it('supports external array modification with mixed (delayed, sync promise) items', function() {
         let order = [];
         const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         const p = async.eachLimit(arr, 3, (value, index, collection) => {
@@ -140,7 +139,7 @@ describe('eachLimit', function() {
                             order.push(value);
                             resolve(value);
                         },
-                        value * 100
+                        value * 25
                     );
                 });
             } else {
@@ -161,7 +160,7 @@ describe('eachLimit', function() {
 
     it('rejects with a 0 limit', function() {
         const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const p = async.eachLimit(arr, 0, iterateeNative());
+        const p = async.eachLimit(arr, 0, () => assert(false, 'iteratee should not be called'));
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error)
@@ -180,7 +179,7 @@ describe('eachLimit', function() {
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal(arr)),
-                46 * 25
+                25 * 25
             ))
         ]);
     });

@@ -46,7 +46,7 @@ describe('each', function() {
                         order.push(value);
                         resolve(value)
                     },
-                    value * 100
+                    value * 25
                 ));
             } else if (value >= 4 && value <= 6) {
                 return new Promise(resolve => {
@@ -116,7 +116,7 @@ describe('each', function() {
                             order.push(value);
                             resolve(value);
                         },
-                        value * 100
+                        value * 25
                     );
                 });
             } else {
