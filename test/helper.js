@@ -8,7 +8,7 @@ export function iterateeDelay(resolver = id) {
             setTimeout(
                 () => {
                     try {
-                        resolve(resolver(value));
+                        resolve(resolver(value, key, collection));
                     } catch (e) {
                         reject(e);
                     }
@@ -26,7 +26,7 @@ export function iterateeDelayWithOrder(order, resolver = id) {
                 () => {
                     order.push(value);
                     try {
-                        resolve(resolver(value));
+                        resolve(resolver(value, key, collection));
                     } catch (e) {
                         reject(e);
                     }
@@ -41,7 +41,7 @@ export function iterateePromise(resolver = id) {
     return (value, key, collection) => {
         return new Promise((resolve, reject) => {
             try {
-                resolve(resolver(value));
+                resolve(resolver(value, key, collection));
             } catch (e) {
                 reject(e);
             }
@@ -54,7 +54,7 @@ export function iterateePromiseWithOrder(order, resolver = id) {
         return new Promise(resolve => {
             order.push(value);
             try {
-                resolve(resolver(value));
+                resolve(resolver(value, key, collection));
             } catch (e) {
                 reject(e);
             }
@@ -64,13 +64,13 @@ export function iterateePromiseWithOrder(order, resolver = id) {
 
 export function iterateeNative(resolver = id) {
     return (value, key, collection) => {
-        return resolver(value);
+        return resolver(value, key, collection);
     };
 };
 
 export function iterateeNativeWithOrder(order, resolver = id) {
     return (value, key, collection) => {
         order.push(value);
-        return resolver(value);
+        return resolver(value, key, collection);
     };
 };
