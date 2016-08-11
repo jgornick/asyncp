@@ -1,9 +1,15 @@
 import tryFn from './tryFn';
 
 export default function eachOf(collection, iteratee) {
+    const keys = Object.keys(collection);
     return Promise.all(
-        Object.keys(collection)
-            .map((key) => tryFn(iteratee, collection[key], key, collection))
+        keys.map((key) => tryFn(iteratee, collection[key], key, collection))
     )
-        .then(() => collection);
+        .then((results) => results.reduce(
+            (result, item, index) => {
+                result[keys[index]] = item;
+                return result;
+            },
+            {}
+        ));
 };

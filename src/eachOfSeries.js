@@ -2,25 +2,17 @@ import tryFn from './tryFn';
 import PromiseBreak from './promiseBreak';
 
 export default function eachOfSeries(collection, iteratee) {
-    return Object.keys(collection)
-        .reduce(
-            (promise, key, index, collection) => {
-                return promise.then(() => {
-                    return tryFn(iteratee, collection[key], key, collection)
-                        .then((result) => {
-                            if (result === false) {
-                                return Promise.reject(new PromiseBreak());
-                            }
-                        });
-                });
-            },
-            Promise.resolve()
-        )
-        .then(() => collection)
-        .catch((error) => {
-            if (error instanceof PromiseBreak) {
-                return Promise.resolve(collection);
-            }
-            throw error;
-        });
+    return Object.keys(collection).reduce(
+        (promise, key, index) => {
+            let collectionValue = collection[key];
+            return promise.then(result =>
+                tryFn(iteratee, collectionValue, key, collection)
+                    .then(value => {
+                        result[key] = value;
+                        return result;
+                    })
+            )
+        },
+        Promise.resolve({})
+    );
 };
