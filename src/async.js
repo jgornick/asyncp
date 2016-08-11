@@ -17,6 +17,9 @@ import doWhilst from './doWhilst';
 import during from './during';
 import each from './each';
 import eachLimit from './eachLimit';
+import eachOf from './eachOf';
+import eachOfLimit from './eachOfLimit';
+import eachOfSeries from './eachOfSeries';
 import eachSeries from './eachSeries';
 import every from './every';
 import everyLimit from './everyLimit';
@@ -24,9 +27,6 @@ import everySeries from './everySeries';
 import filter from './filter';
 import filterLimit from './filterLimit';
 import filterSeries from './filterSeries';
-import eachOf from './eachOf';
-import eachOfLimit from './eachOfLimit';
-import eachOfSeries from './eachOfSeries';
 import forever from './forever';
 import liftFn from './liftFn';
 import map from './map';
@@ -76,6 +76,9 @@ export default {
     during,
     each,
     eachLimit,
+    eachOf,
+    eachOfLimit,
+    eachOfSeries,
     eachSeries,
     every,
     everyLimit,
@@ -83,9 +86,6 @@ export default {
     filter,
     filterLimit,
     filterSeries,
-    eachOf,
-    eachOfLimit,
-    eachOfSeries,
     forever,
     liftFn,
     map,
@@ -125,8 +125,8 @@ export default {
     forEachSeries: eachSeries,
     forEachLimit: eachLimit,
     forEachOf: eachOf,
-    forEachSeriesOf: eachOfSeries,
-    forEachLimitOf: eachOfLimit,
+    forEachOfSeries: eachOfSeries,
+    forEachOfLimit: eachOfLimit,
     inject: reduce,
     foldl: reduce,
     foldr: reduceRight,
