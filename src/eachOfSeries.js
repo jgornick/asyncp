@@ -1,9 +1,8 @@
 import tryFn from './tryFn';
-import PromiseBreak from './promiseBreak';
 
 export default function eachOfSeries(collection, iteratee) {
     return Object.keys(collection).reduce(
-        (promise, key, index) => {
+        (promise, key) => {
             let collectionValue = collection[key];
             return promise.then(result =>
                 tryFn(iteratee, collectionValue, key, collection)
