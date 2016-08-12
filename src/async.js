@@ -117,6 +117,8 @@ export default {
 
     // aliases
     all: every,
+    allLimit: everyLimit,
+    allSeries: everySeries,
     any: some,
     find: detect,
     findLimit: detectLimit,
