@@ -109,6 +109,34 @@ describe('everyLimit', function() {
         ]);
     });
 
+    it('supports limit greater than collection size', function() {
+        let order = [];
+        const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const p = async.everyLimit(arr, 20, iterateeNativeWithOrder(order, x => x >= 0));
+
+        return Promise.all([
+            p.should.eventually.equal(true),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal(arr)),
+                10 * 25
+            ))
+        ]);
+    });
+
+    it('supports limit equal to collection size', function() {
+        let order = [];
+        const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const p = async.everyLimit(arr, 10, iterateeNativeWithOrder(order, x => x >= 0));
+
+        return Promise.all([
+            p.should.eventually.equal(true),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal(arr)),
+                10 * 25
+            ))
+        ]);
+    });
+
     it('supports external array modification with mixed (delayed, sync promise) items', function() {
         let order = [];
         let arr = [4, 3, 2, 1];
@@ -139,6 +167,15 @@ describe('everyLimit', function() {
                 () => resolve(order.should.deep.equal([4, 2, 1, 3])),
                 5 * 25
             ))
+        ]);
+    });
+
+    it('rejects with a 0 limit', function() {
+        const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const p = async.everyLimit(arr, 0, () => assert(false, 'iteratee should not be called'));
+
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error)
         ]);
     });
 
