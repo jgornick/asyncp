@@ -3,13 +3,14 @@ import PromiseBreak from './promiseBreak';
 
 export default function everySeries(collection, predicate) {
     return collection.reduce(
-        (promise, item, index, collection) => {
+        (promise, ...args) => {
             return promise.then(() => {
-                return tryFn(predicate, item, index, collection)
+                return tryFn(predicate, ...args)
                     .then((result) => {
                         if (result === false) {
                             return Promise.reject(new PromiseBreak(false));
                         }
+                        return promise;
                     });
             });
         },

@@ -2,8 +2,8 @@ import tryFn from './tryFn';
 import PromiseBreak from './promiseBreak';
 
 export default function every(collection, predicate) {
-    return Promise.all(collection.map((item, index, collection) => {
-        return tryFn(predicate, item, index, collection)
+    return Promise.all(collection.map((...args) => {
+        return tryFn(predicate, ...args)
             .then((result) => {
                 if (result === false) {
                     return Promise.reject(new PromiseBreak(false));
