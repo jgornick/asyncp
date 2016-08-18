@@ -200,4 +200,9 @@ describe('eachOfSeries', function() {
         assert.strictEqual(async.eachOfSeries, async.forEachOfSeries);
         done();
     });
+
+    it('has mapValuesSeries alias', function(done) {
+        assert.strictEqual(async.eachOfSeries, async.mapValuesSeries);
+        done();
+    });
 });

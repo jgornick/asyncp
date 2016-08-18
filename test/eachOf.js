@@ -200,4 +200,9 @@ describe('eachOf', function() {
         assert.strictEqual(async.eachOf, async.forEachOf);
         done();
     });
+
+    it('has mapValues alias', function(done) {
+        assert.strictEqual(async.eachOf, async.mapValues);
+        done();
+    });
 });

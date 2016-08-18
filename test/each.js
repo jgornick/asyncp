@@ -195,4 +195,9 @@ describe('each', function() {
         assert.strictEqual(async.each, async.forEach);
         done();
     });
+
+    it('has map alias', function(done) {
+        assert.strictEqual(async.each, async.map);
+        done();
+    });
 });

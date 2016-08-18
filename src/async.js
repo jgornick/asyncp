@@ -2,6 +2,10 @@ import PromiseBreak from './promiseBreak';
 import PromiseTimeoutError from './promiseTimeoutError';
 import WaterfallError from './waterfallError';
 
+import all from './all';
+import allLimit from './allLimit';
+import allSeries from './allSeries';
+import any from './any';
 import applyEach from './applyEach';
 import applyEachSeries from './applyEachSeries';
 import compose from './compose';
@@ -27,11 +31,26 @@ import everySeries from './everySeries';
 import filter from './filter';
 import filterLimit from './filterLimit';
 import filterSeries from './filterSeries';
+import find from './find';
+import findLimit from './findLimit';
+import findSeries from './findSeries';
+import foldl from './foldl';
+import foldr from './foldr';
+import forEach from './forEach';
+import forEachLimit from './forEachLimit';
+import forEachOf from './forEachOf';
+import forEachOfLimit from './forEachOfLimit';
+import forEachOfSeries from './forEachOfSeries';
+import forEachSeries from './forEachSeries';
 import forever from './forever';
+import inject from './inject';
 import liftFn from './liftFn';
 import map from './map';
 import mapLimit from './mapLimit';
 import mapSeries from './mapSeries';
+import mapValues from './mapValues';
+import mapValuesLimit from './mapValuesLimit';
+import mapValuesSeries from './mapValuesSeries';
 import parallel from './parallel';
 import parallelLimit from './parallelLimit';
 import reduce from './reduce';
@@ -41,6 +60,9 @@ import rejectLimit from './rejectLimit';
 import rejectSeries from './rejectSeries';
 import retry from './retry';
 import retryable from './retryable';
+import select from './select';
+import selectLimit from './selectLimit';
+import selectSeries from './selectSeries';
 import seq from './seq';
 import series from './series';
 import some from './some';
@@ -61,6 +83,10 @@ export default {
     PromiseTimeoutError,
     WaterfallError,
 
+    all,
+    allLimit,
+    allSeries,
+    any,
     applyEach,
     applyEachSeries,
     compose,
@@ -86,11 +112,26 @@ export default {
     filter,
     filterLimit,
     filterSeries,
+    find,
+    findLimit,
+    findSeries,
+    foldl,
+    foldr,
+    forEach,
+    forEachLimit,
+    forEachOf,
+    forEachOfLimit,
+    forEachOfSeries,
+    forEachSeries,
     forever,
+    inject,
     liftFn,
     map,
     mapLimit,
     mapSeries,
+    mapValues,
+    mapValuesLimit,
+    mapValuesSeries,
     parallel,
     parallelLimit,
     reduce,
@@ -100,6 +141,9 @@ export default {
     rejectSeries,
     retry,
     retryable,
+    select,
+    selectLimit,
+    selectSeries,
     seq,
     series,
     some,
@@ -114,25 +158,4 @@ export default {
     until,
     waterfall,
     whilst,
-
-    // aliases
-    all: every,
-    allLimit: everyLimit,
-    allSeries: everySeries,
-    any: some,
-    find: detect,
-    findLimit: detectLimit,
-    findSeries: detectSeries,
-    forEach: each,
-    forEachSeries: eachSeries,
-    forEachLimit: eachLimit,
-    forEachOf: eachOf,
-    forEachOfSeries: eachOfSeries,
-    forEachOfLimit: eachOfLimit,
-    inject: reduce,
-    foldl: reduce,
-    foldr: reduceRight,
-    select: filter,
-    selectLimit: filterLimit,
-    selectSeries: filterSeries
 };

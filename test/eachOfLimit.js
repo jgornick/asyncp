@@ -232,4 +232,9 @@ describe('eachOfLimit', function() {
         assert.strictEqual(async.eachOfLimit, async.forEachOfLimit);
         done();
     });
+
+    it('has mapValuesLimit alias', function(done) {
+        assert.strictEqual(async.eachOfLimit, async.mapValuesLimit);
+        done();
+    });
 });
