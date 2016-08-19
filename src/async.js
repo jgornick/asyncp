@@ -6,6 +6,8 @@ import all from './all';
 import allLimit from './allLimit';
 import allSeries from './allSeries';
 import any from './any';
+import anyLimit from './anyLimit';
+import anySeries from './anySeries';
 import applyEach from './applyEach';
 import applyEachSeries from './applyEachSeries';
 import compose from './compose';
@@ -87,6 +89,8 @@ export default {
     allLimit,
     allSeries,
     any,
+    anyLimit,
+    anySeries,
     applyEach,
     applyEachSeries,
     compose,
