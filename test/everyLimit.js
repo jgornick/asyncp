@@ -20,13 +20,13 @@ describe('everyLimit', function() {
     it('does delayed items false', function() {
         let order = [];
         const arr = [3, 2, 1];
-        const p = async.everyLimit(arr, 2, iterateeDelayWithOrder(order, (x) => x <= 1));
+        const p = async.everyLimit(arr, 2, iterateeDelayWithOrder(order, (x) => x > 1));
 
         return Promise.all([
             p.should.eventually.equal(false),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal([2, 3, 1])),
-                4 * 25
+                5 * 25
             ))
         ]);
     });

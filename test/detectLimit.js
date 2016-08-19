@@ -15,7 +15,7 @@ describe('detectLimit', function() {
             p.should.eventually.equal(2),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal([1, 3, 2, 1, 2])),
-                8 * 25
+                9 * 25
             ))
         ]);
     });
@@ -28,7 +28,7 @@ describe('detectLimit', function() {
             p.should.eventually.equal(2),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal(arr)),
-                4 * 25
+                9 * 25
             ))
         ]);
     });
@@ -164,7 +164,7 @@ describe('detectLimit', function() {
             p.should.eventually.equal(2),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal(arr)),
-                10 * 25
+                25
             ))
         ]);
     });
@@ -178,7 +178,7 @@ describe('detectLimit', function() {
             p.should.eventually.equal(2),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal(arr)),
-                10 * 25
+                25
             ))
         ]);
     });
