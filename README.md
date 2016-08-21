@@ -8,10 +8,6 @@ Port of the async.js API to use Promises instead of callbacks.
 
 The following methods are missing from async-p due to use of Promises. However, some methods that are missing provide value and should be implemented. Contributions are welcome!
 
-### Collections
-
-* ```transform```
-
 ### Control Flow
 
 * ```queue```
@@ -24,12 +20,12 @@ The following methods are missing from async-p due to use of Promises. However, 
 ### Utils
 
 * ```apply``` => Use native function.apply.
-* ```race``` => Use Promise.race.
+* ```race``` => Use [Promise.race](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race).
 * ```nextTick```
-* ```memoize``` => A Promise can only be resolved once which means the result is already cached. Alternatively, use lodash#memoize.
+* ```memoize``` => A Promise can only be resolved once which means the result is already cached. Alternatively, use [lodash#memoize](https://lodash.com/docs#memoize).
 * ```unmemoize```
 * ```ensureAsync```
-* ```constant``` => Alternatively, use lodash#constant.
+* ```constant``` => Alternatively, use [lodash#constant](https://lodash.com/docs#constant).
 * ```asyncify```
 * ```log```
 * ```dir```

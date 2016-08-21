@@ -75,6 +75,7 @@ import timeout from './timeout';
 import times from './times';
 import timesLimit from './timesLimit';
 import timesSeries from './timesSeries';
+import transform from './transform';
 import tryFn from './tryFn';
 import until from './until';
 import waterfall from './waterfall';
@@ -158,6 +159,7 @@ export default {
     times,
     timesLimit,
     timesSeries,
+    transform,
     tryFn,
     until,
     waterfall,
