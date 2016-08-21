@@ -122,7 +122,7 @@ describe('someLimit', function() {
     });
 
     it('supports empty collections', function() {
-        const p = async.someLimit([], () => assert(false, 'iteratee should not be called'));
+        const p = async.someLimit([], 2, () => assert(false, 'iteratee should not be called'));
 
         return Promise.all([
             p.should.eventually.equal(false)

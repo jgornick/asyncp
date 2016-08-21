@@ -87,7 +87,7 @@ describe('eachOfLimit', function() {
     });
 
     it('supports empty collections', function() {
-        const p = async.eachOfLimit({}, () => assert(false, 'iteratee should not be called'));
+        const p = async.eachOfLimit({}, 2, () => assert(false, 'iteratee should not be called'));
 
         return Promise.all([
             p.should.eventually.be.empty

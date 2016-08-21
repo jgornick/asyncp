@@ -102,7 +102,7 @@ describe('everyLimit', function() {
     });
 
     it('supports empty collections', function() {
-        const p = async.everyLimit([], () => assert(false, 'iteratee should not be called'));
+        const p = async.everyLimit([], 2, () => assert(false, 'iteratee should not be called'));
 
         return Promise.all([
             p.should.eventually.equal(true)
