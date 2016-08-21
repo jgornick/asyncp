@@ -9,5 +9,5 @@ export default function sortBy(collection, iteratee, comparator) {
         tryFn(iteratee, item, index, collection)
             .then((result) => [result, item])
     ))
-        .then((results) => results.sort(([a], [b]) => comparator(a, b)).map(([sort, item]) => item));
+        .then((results) => results.sort(([a], [b]) => comparator(a, b)).map(([_, item]) => item));
 };
