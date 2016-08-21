@@ -37,6 +37,10 @@ The following methods are missing from async-p due to use of Promises. However, 
 * ```reflect```
 * ```reflectAll```
 
+## "Gotchas"
+
+* When using collection functions (`each`, `eachOf`, `detect`, etc...), the `collection` passed into the `iteratee` is a *reference*. This means that for each iteration, it's possible to modify the source collection. It's recommended to use the the `collection` as a read-only reference. This is especially important with `*Series` and `*Limit` methods as the `iteratee` is *not* called in the same tick as the original function call.
+
 ## Credits
 
 Much thanks to [Brian Cavalier](https://github.com/briancavalier) and others in the #cujojs room on freenode!
