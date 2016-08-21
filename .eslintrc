@@ -21,7 +21,7 @@
         ],
         "no-caller": 2,
         "no-undef": 2,
-        "no-unused-vars": 2,
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_$" }],
         "no-eval": 2,
         "comma-style": [
             2,
