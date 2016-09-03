@@ -46,18 +46,18 @@ describe('waterfall', function() {
     it('rejects using delayed Promise.reject', function() {
         let order = [];
         const tasks = [
-          order => new Promise(resolve => setTimeout(_ => {
-            order.push(1);
-            resolve([order]);
-          }, 25)),
-          order => new Promise((_, reject) => setTimeout(_ => {
-            order.push(2);
-            reject(new Error('error'));
-          }, 25)),
-          _ => new Promise(resolve => setTimeout(_ => {
-            assert(false, 'task should not be called')
-            resolve();
-          }, 25)),
+            order => new Promise(resolve => setTimeout(_ => {
+                order.push(1);
+                resolve([order]);
+            }, 25)),
+            order => new Promise((_, reject) => setTimeout(_ => {
+                order.push(2);
+                reject(new Error('error'));
+            }, 25)),
+            _ => new Promise(resolve => setTimeout(_ => {
+                assert(false, 'task should not be called')
+                resolve();
+            }, 25)),
         ];
         const p = async.waterfall(tasks, order);
         return Promise.all([
@@ -72,18 +72,18 @@ describe('waterfall', function() {
     it('rejects using Promise.reject', function() {
         let order = [];
         const tasks = [
-          order => new Promise(resolve => {
-            order.push(1);
-            resolve([order]);
-          }),
-          order => new Promise((_, reject) => {
-            order.push(2);
-            reject(new Error('error'));
-          }),
-          _ => new Promise(resolve => {
-            assert(false, 'task should not be called')
-            resolve();
-          }),
+            order => new Promise(resolve => {
+                order.push(1);
+                resolve([order]);
+            }),
+            order => new Promise((_, reject) => {
+                order.push(2);
+                reject(new Error('error'));
+            }),
+            _ => new Promise(resolve => {
+                assert(false, 'task should not be called')
+                resolve();
+            }),
         ];
         const p = async.waterfall(tasks, order);
         return Promise.all([
@@ -95,20 +95,20 @@ describe('waterfall', function() {
         ]);
     });
 
-  it('rejects using sync throw', function() {
+    it('rejects using sync throw', function() {
         let order = [];
         const tasks = [
-          order => {
-            order.push(1);
-            return [order];
-          },
-          order => {
-            order.push(2);
-            throw new Error('error');
-          },
-          _ => {
-            assert(false, 'task should not be called');
-          },
+            order => {
+                order.push(1);
+                return [order];
+            },
+            order => {
+                order.push(2);
+                throw new Error('error');
+            },
+            _ => {
+                assert(false, 'task should not be called');
+            },
         ];
         const p = async.waterfall(tasks, order);
         return Promise.all([
