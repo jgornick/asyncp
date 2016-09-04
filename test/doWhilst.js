@@ -19,7 +19,7 @@ describe('doWhilst', function() {
         );
 
         return Promise.all([
-            p.should.eventually.equal(5),
+            p.should.eventually.equal(undefined),
             p.then(() => order.should.deep.equal([
                 'task0',
                 'condition1',
@@ -53,7 +53,7 @@ describe('doWhilst', function() {
         );
 
         return Promise.all([
-            p.should.eventually.equal(5),
+            p.should.eventually.equal(undefined),
             p.then(() => order.should.deep.equal([
                 'task0',
                 'condition1',
@@ -87,7 +87,7 @@ describe('doWhilst', function() {
         );
 
         return Promise.all([
-            p.should.eventually.equal(5),
+            p.should.eventually.equal(undefined),
             p.then(() => order.should.deep.equal([
                 'task0',
                 'condition1',
