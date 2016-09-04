@@ -1,10 +1,15 @@
 import tryFn from './tryFn';
 
-export default function whilst(condition, task, accumulator) {
-    return tryFn(condition, accumulator)
+export default function whilst(condition, task, ...args) {
+    return tryFn(condition, ...args)
         .then((conditionResult) => {
             return conditionResult
-                ? tryFn(task, accumulator).then((result) => whilst(condition, task, result))
-                : Promise.resolve(accumulator);
+                ? tryFn(task, ...args)
+                    .then((result) =>
+                        Array.isArray(result)
+                            ? whilst(condition, task, ...result)
+                            : whilst(condition, task, result)
+                    )
+                : Promise.resolve();
         });
 };
