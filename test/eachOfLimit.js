@@ -8,11 +8,11 @@ import {
 describe('eachOfLimit', function() {
     it('does delayed items', function() {
         let order = [];
-        const coll = {a: 1, b: 3, c: 2};
+        const coll = {a: 1, b: 4, c: 2};
         const p = async.eachOfLimit(coll, 2, iterateeDelayWithOrder(order));
         return Promise.all([
             p.should.eventually.deep.equal(coll),
-            p.then(() => order.should.deep.equal([1, 3, 2]))
+            p.then(() => order.should.deep.equal([1, 2, 4]))
         ]);
     });
 
