@@ -78,14 +78,13 @@ export function accIterateeNativeWithOrder(order, resolver = id) {
     };
 };
 
-export function delayedWithOrder(order, index, resolver = id) {
-    return (value) => {
+export function delayedTask(index, resolver = id) {
+    return (...args) => {
         return new Promise((resolve, reject) => {
             setTimeout(
                 () => {
-                    order.push(index);
                     try {
-                        resolve(resolver(value, index));
+                        resolve(resolver(...args, index));
                     } catch (e) {
                         reject(e);
                     }
@@ -96,12 +95,29 @@ export function delayedWithOrder(order, index, resolver = id) {
     };
 };
 
-export function promiseWithOrder(order, index, resolver = id) {
-    return (value) => {
+export function delayedWithOrder(order, index, resolver = id) {
+    return (...args) => {
         return new Promise((resolve, reject) => {
-            order.push(index);
+            setTimeout(
+                () => {
+                    order.push(index);
+                    try {
+                        resolve(resolver(...args, index));
+                    } catch (e) {
+                        reject(e);
+                    }
+                },
+                index * 25
+            );
+        });
+    };
+};
+
+export function promiseTask(index, resolver = id) {
+    return (...args) => {
+        return new Promise((resolve, reject) => {
             try {
-                resolve(resolver(value, index));
+                resolve(resolver(...args, index));
             } catch (e) {
                 reject(e);
             }
@@ -109,9 +125,28 @@ export function promiseWithOrder(order, index, resolver = id) {
     };
 };
 
+export function promiseWithOrder(order, index, resolver = id) {
+    return (...args) => {
+        return new Promise((resolve, reject) => {
+            order.push(index);
+            try {
+                resolve(resolver(...args, index));
+            } catch (e) {
+                reject(e);
+            }
+        });
+    };
+};
+
+export function nativeTask(index, resolver = id) {
+    return (...args) => {
+        return resolver(...args, index);
+    };
+};
+
 export function nativeWithOrder(order, index, resolver = id) {
-    return (value) => {
+    return (...args) => {
         order.push(index);
-        return resolver(value, index);
+        return resolver(...args, index);
     };
 };
