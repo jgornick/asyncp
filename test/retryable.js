@@ -127,13 +127,16 @@ describe('retryable', function() {
     it('retries until native fails with custom times object and interval number', function() {
         let order = [];
         let counter = { count: 0 };
-        const timeStart = +new Date;
         const f = async.retryable({ times: 3, interval: 100 }, nativeTask(1, failTask));
+        const timeStart = +new Date;
         const p = f(order, counter);
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
-            p.catch(() => assert(+new Date - timeStart > 200, 'interval should be at least 200ms total')),
+            p.catch(() => {
+                let now = +new Date;
+                assert(now - timeStart > 200, `interval ${now - timeStart}ms should be at least 200ms total`)
+            }),
             p.catch(() => order.should.deep.equal([1, 2, 3]))
         ]);
     });
@@ -142,7 +145,6 @@ describe('retryable', function() {
         let order = [];
         let counter = { count: 0 };
         let intervalCounter = 0;
-        const timeStart = +new Date;
         const f = async.retryable(
             {
                 times: 3,
@@ -154,13 +156,30 @@ describe('retryable', function() {
             },
             nativeTask(1, failTask)
         );
+        const timeStart = +new Date;
         const p = f(order, counter);
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
-            p.catch(() => assert(+new Date - timeStart > 200, 'interval should be at least 200ms total')),
+            p.catch(() => {
+                let now = +new Date;
+                assert(now - timeStart > 200, `interval ${now - timeStart}ms should be at least 200ms total`)
+            }),
             p.catch(() => intervalCounter.should.equal(2)),
             p.catch(() => order.should.deep.equal([1, 2, 3]))
         ]);
     });
+
+    it('throws with invalid times value', function(done) {
+        expect(async.retryable('foo', delayedTask(1, failTask)))
+            .to.throw(Error, `Invalid times option value of "foo"`)
+        done();
+    });
+
+    it('throws with invalid times option', function(done) {
+        expect(async.retryable({ times: 'foo' }, delayedTask(1, failTask)))
+            .to.throw(Error, `Invalid times option value of "foo"`)
+        done();
+    });
+
 });

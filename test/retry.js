@@ -122,7 +122,10 @@ describe('retry', function() {
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
-            p.catch(() => assert(+new Date - timeStart > 200, 'interval should be at least 200ms total')),
+            p.catch(() => {
+                let now = +new Date;
+                assert(now - timeStart > 200, `interval ${now - timeStart}ms should be at least 200ms total`)
+            }),
             p.catch(() => order.should.deep.equal([1, 2, 3]))
         ]);
     });
@@ -148,9 +151,24 @@ describe('retry', function() {
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
-            p.catch(() => assert(+new Date - timeStart > 200, 'interval should be at least 200ms total')),
+            p.catch(() => {
+                let now = +new Date;
+                assert(now - timeStart > 200, `interval ${now - timeStart}ms should be at least 200ms total`)
+            }),
             p.catch(() => intervalCounter.should.equal(2)),
             p.catch(() => order.should.deep.equal([1, 2, 3]))
         ]);
+    });
+
+    it('throws with invalid times value', function(done) {
+        expect(async.retry.bind(null, 'foo', delayedTask(1, failTask)))
+            .to.throw(Error, `Invalid times option value of "foo"`)
+        done();
+    });
+
+    it('throws with invalid times option', function(done) {
+        expect(async.retry.bind(null, { times: 'foo' }, delayedTask(1, failTask)))
+            .to.throw(Error, `Invalid times option value of "foo"`)
+        done();
     });
 });
