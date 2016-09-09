@@ -3,10 +3,6 @@ export default class PromiseBreak {
         return this._value;
     }
 
-    set value(value) {
-        this._value = value;
-    }
-
     constructor(value) {
         this._value = value;
     }
