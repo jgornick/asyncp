@@ -1,7 +1,5 @@
 # async-p
 
-> This library is not production ready simply beacuse there aren't tests, documentation and missing implementations.
-
 Port of the async.js API to use Promises instead of callbacks.
 
 ## Missing Implementations
