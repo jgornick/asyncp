@@ -1,3 +1,4 @@
+import isPlainObject from './isPlainObject';
 import tryFn from './tryFn';
 import PromiseBreak from './promiseBreak';
 
@@ -12,7 +13,7 @@ export default function retry(opts, ...args) {
         };
     }
 
-    if (Number.isInteger(opts)) {
+    if (!isPlainObject(opts)) {
         opts = {
             times: opts,
             interval: 0
@@ -20,7 +21,7 @@ export default function retry(opts, ...args) {
     }
 
     if (!Number.isInteger(opts.times)) {
-        opts.times = 5;
+        throw new Error(`Invalid times option value of "${opts.times}"`);
     }
 
     if (opts.interval == null) {
