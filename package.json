@@ -1,10 +1,17 @@
 {
-  "name": "async-p",
-  "version": "0.6.0",
+  "name": "asyncp",
+  "version": "0.7.0",
   "description": "Async.js for Promises",
   "main": "dist/async",
-  "author": "Joe Gornick",
+  "author": "Joe Gornick <joe@joegornick.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jgornick/asyncp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jgornick/asyncp.git"
+  },
   "engines": {
     "node": ">=4.0.0"
   },
