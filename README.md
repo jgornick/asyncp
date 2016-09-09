@@ -1,4 +1,4 @@
-# async-p
+# asyncp ![](https://travis-ci.org/jgornick/asyncp.svg?branch=master)
 
 Port of the async.js API to use Promises instead of callbacks.
 
