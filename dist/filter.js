@@ -5,16 +5,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = filter;
 
-var _each = require('./each');
+var _tryFn = require('./tryFn');
 
-var _each2 = _interopRequireDefault(_each);
+var _tryFn2 = _interopRequireDefault(_tryFn);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var ASYNCP_UNDEFINED = '__ASYNCP_UNDEFINED__';
+
 function filter(collection, predicate) {
-    return (0, _each2.default)(collection, predicate).then(function (results) {
-        return collection.filter(function (item, index) {
-            return results[index];
+    return Promise.all(collection.map(function (item, index, collection) {
+        return (0, _tryFn2.default)(predicate, item, index, collection).then(function (result) {
+            return result === true ? item : ASYNCP_UNDEFINED;
+        });
+    })).then(function (results) {
+        return results.filter(function (item) {
+            return item != ASYNCP_UNDEFINED;
         });
     });
 };

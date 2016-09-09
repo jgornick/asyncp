@@ -5,29 +5,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = eachSeries;
 
-var _promiseBreak = require('./promiseBreak');
+var _tryFn = require('./tryFn');
 
-var _promiseBreak2 = _interopRequireDefault(_promiseBreak);
+var _tryFn2 = _interopRequireDefault(_tryFn);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function eachSeries(collection, iterator) {
-    var results = [];
+function eachSeries(collection, iteratee) {
+    return collection.reduce(function (promise) {
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            args[_key - 1] = arguments[_key];
+        }
 
-    return collection.reduce(function (promise, item, index, collection) {
         return promise.then(function (results) {
-            return Promise.resolve(iterator(item, index, collection)).then(function (result) {
-                if (result === false) {
-                    return Promise.reject(new _promiseBreak2.default(item));
-                }
+            return _tryFn2.default.apply(undefined, [iteratee].concat(args)).then(function (result) {
                 results.push(result);
                 return results;
             });
         });
-    }, Promise.resolve(results)).catch(function (error) {
-        if (error instanceof _promiseBreak2.default) {
-            return Promise.resolve(results);
-        }
-        throw error;
-    });
+    }, Promise.resolve([]));
 };

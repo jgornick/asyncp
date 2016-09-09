@@ -16,6 +16,10 @@ function series(tasks) {
         args[_key - 1] = arguments[_key];
     }
 
+    if (!Array.isArray(tasks)) {
+        return Promise.reject(new Error('First argument to series must be an array of functions'));
+    }
+
     return tasks.reduce(function (promise, task) {
         return promise.then(function (results) {
             return _tryFn2.default.apply(undefined, [task].concat(args)).then(function (result) {

@@ -20,6 +20,10 @@ function parallelLimit(tasks, limit) {
         args[_key - 2] = arguments[_key];
     }
 
+    if (!limit > 0) {
+        return Promise.reject(new Error('Limit must be a number greater than 0.'));
+    }
+
     return Promise.all(tasks.map((0, _throat2.default)(limit, function (task) {
         return _tryFn2.default.apply(undefined, [task].concat(args));
     })));

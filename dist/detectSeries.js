@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = detectSeries;
 
+var _tryFn = require('./tryFn');
+
+var _tryFn2 = _interopRequireDefault(_tryFn);
+
 var _promiseBreak = require('./promiseBreak');
 
 var _promiseBreak2 = _interopRequireDefault(_promiseBreak);
@@ -16,10 +20,11 @@ function detectSeries(collection, predicate) {
 
     return collection.reduce(function (promise, item, index, collection) {
         return promise.then(function () {
-            return Promise.resolve(predicate(item, index, collection)).then(function (result) {
+            return (0, _tryFn2.default)(predicate, item, index, collection).then(function (result) {
                 if (result === true) {
                     return Promise.reject(new _promiseBreak2.default(item));
                 }
+                return promise;
             });
         });
     }, Promise.resolve()).then(function () {
