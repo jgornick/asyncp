@@ -18,11 +18,18 @@ describe('times', function() {
 
     it('iterates n times with delayed', function() {
         let order = [];
-        const p = async.times(5, delayedTask(1, successTask), order);
+        const p = async.times(
+            5,
+            (index, order) => new Promise(resolve => setTimeout(_ => {
+                order.push(index);
+                resolve(index);
+            }, (5 - index) * 25)),
+            order
+        );
 
         return Promise.all([
             p.should.eventually.deep.equal([0, 1, 2, 3, 4]),
-            p.then(() => order.should.deep.equal([0, 1, 2, 3, 4]))
+            p.then(() => order.should.deep.equal([4, 3, 2, 1, 0]))
         ]);
     });
 
