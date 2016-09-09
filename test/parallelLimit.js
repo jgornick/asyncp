@@ -179,11 +179,11 @@ describe('parallelLimit', function() {
 
     it('rejects using delayed Promise.reject', function() {
         let order = [];
-        const arr = [1, 4, 2];
+        const arr = [1, 4, 1];
         const tasks = arr.map(indexValue =>
             delayedWithOrder(order, indexValue, (value, index) => {
                 value.should.equal(0);
-                if (index == 2) {
+                if (index == 4) {
                     throw new Error('error');
                 } else {
                     return index;
@@ -195,8 +195,8 @@ describe('parallelLimit', function() {
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([1, 2, 4])),
-                7 * 25
+                () => resolve(order.should.deep.equal([1, 1, 4])),
+                6 * 25
             ))
         ]);
     });

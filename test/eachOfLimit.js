@@ -174,17 +174,17 @@ describe('eachOfLimit', function() {
 
     it('rejects using delayed Promise.reject', function() {
         let order = [];
-        const coll = {a: 1, b: 3, c: 2};
+        const coll = {a: 1, b: 4, c: 1};
         const p = async.eachOfLimit(coll, 2, iterateeDelayWithOrder(
             order,
-            (x) => x == 2 ? Promise.reject(new Error('error')) : x
+            (x) => x == 4 ? Promise.reject(new Error('error')) : x
         ));
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([1, 3, 2])),
-                4 * 25
+                () => resolve(order.should.deep.equal([1, 1, 4])),
+                6 * 25
             ))
         ]);
     });

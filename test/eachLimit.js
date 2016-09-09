@@ -169,27 +169,27 @@ describe('eachLimit', function() {
 
     it('rejects using delayed Promise.reject', function() {
         let order = [];
-        const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const p = async.eachLimit(arr, 3, iterateeDelayWithOrder(
+        const arr = [1, 4, 1];
+        const p = async.eachLimit(arr, 2, iterateeDelayWithOrder(
             order,
-            (x) => x == 2 ? Promise.reject(new Error('error')) : x
+            (x) => x == 4 ? Promise.reject(new Error('error')) : x
         ));
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal(arr)),
-                25 * 25
+                () => resolve(order.should.deep.equal([1, 1, 4])),
+                6 * 25
             ))
         ]);
     });
 
     it('rejects using sync Promise.reject', function() {
         let order = [];
-        const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const p = async.eachLimit(arr, 3, iterateePromiseWithOrder(
+        const arr = [1, 3, 2];
+        const p = async.eachLimit(arr, 2, iterateePromiseWithOrder(
             order,
-            (x) => x == 2 ? Promise.reject(new Error('error')) : x
+            (x) => x == 3 ? Promise.reject(new Error('error')) : x
         ));
 
         return Promise.all([
@@ -203,8 +203,8 @@ describe('eachLimit', function() {
 
     it('rejects using sync throw', function() {
         let order = [];
-        const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const p = async.eachLimit(arr, 3, iterateeNativeWithOrder(
+        const arr = [1, 3, 2];
+        const p = async.eachLimit(arr, 2, iterateeNativeWithOrder(
             order,
             (x) => {
                 if (x == 3) {

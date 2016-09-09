@@ -181,17 +181,17 @@ describe('everyLimit', function() {
 
     it('rejects using delayed Promise.reject', function() {
         let order = [];
-        const arr = [3, 2, 1];
+        const arr = [1, 4, 1];
         const p = async.everyLimit(arr, 2, iterateeDelayWithOrder(
             order,
-            (x) => x == 2 ? Promise.reject(new Error('error')) : true
+            (x) => x == 4 ? Promise.reject(new Error('error')) : true
         ));
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([2, 3, 1])),
-                4 * 25
+                () => resolve(order.should.deep.equal([1, 1, 4])),
+                6 * 25
             ))
         ]);
     });

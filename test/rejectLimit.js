@@ -219,17 +219,17 @@ describe('rejectLimit', function() {
 
     it('rejects using delayed Promise.reject', function() {
         let order = [];
-        const arr = [1, 4, 2];
+        const arr = [1, 4, 1];
         const p = async.rejectLimit(arr, 2, iterateeDelayWithOrder(
             order,
-            (x) => x == 2 ? Promise.reject(new Error('error')) : false
+            (x) => x == 4 ? Promise.reject(new Error('error')) : false
         ));
 
         return Promise.all([
             p.should.eventually.be.rejectedWith(Error),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([1, 2, 4])),
-                5 * 25
+                () => resolve(order.should.deep.equal([1, 1, 4])),
+                6 * 25
             ))
         ]);
     });
