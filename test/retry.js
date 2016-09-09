@@ -124,7 +124,7 @@ describe('retry', function() {
             p.should.eventually.be.rejectedWith(Error),
             p.catch(() => {
                 let now = +new Date;
-                assert(now - timeStart > 200, `interval ${now - timeStart}ms should be at least 200ms total`)
+                assert(now - timeStart >= 200, `interval ${now - timeStart}ms should be at least 200ms total`)
             }),
             p.catch(() => order.should.deep.equal([1, 2, 3]))
         ]);
@@ -153,7 +153,7 @@ describe('retry', function() {
             p.should.eventually.be.rejectedWith(Error),
             p.catch(() => {
                 let now = +new Date;
-                assert(now - timeStart > 200, `interval ${now - timeStart}ms should be at least 200ms total`)
+                assert(now - timeStart >= 200, `interval ${now - timeStart}ms should be at least 200ms total`)
             }),
             p.catch(() => intervalCounter.should.equal(2)),
             p.catch(() => order.should.deep.equal([1, 2, 3]))
