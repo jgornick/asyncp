@@ -25,9 +25,6 @@ export default function waterfall(tasks, ...args) {
         Promise.resolve(args)
     )
         .catch((error) => {
-            let waterfallError = new WaterfallError();
-            waterfallError.message = error.message;
-            waterfallError.results = results;
-            throw waterfallError;
+            throw new WaterfallError(error.message, results);
         });
 };
