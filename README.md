@@ -1,4 +1,4 @@
-# asyncp ![](https://travis-ci.org/jgornick/asyncp.svg?branch=master) [![Join the chat at https://gitter.im/jgornick/asyncp](https://badges.gitter.im/jgornick/asyncp.svg)](https://gitter.im/jgornick/asyncp)
+# asyncp ![](https://travis-ci.org/jgornick/asyncp.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/jgornick/asyncp/badge.svg?branch=master)](https://coveralls.io/github/jgornick/asyncp?branch=master) [![Join the chat at https://gitter.im/jgornick/asyncp](https://badges.gitter.im/jgornick/asyncp.svg)](https://gitter.im/jgornick/asyncp)
 
 Port of the async.js API to use Promises instead of callbacks.
 
