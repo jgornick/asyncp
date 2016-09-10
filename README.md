@@ -1,5 +1,7 @@
 # asyncp ![](https://travis-ci.org/jgornick/asyncp.svg?branch=master)
 
+[![Join the chat at https://gitter.im/asyncp/Lobby](https://badges.gitter.im/asyncp/Lobby.svg)](https://gitter.im/asyncp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Port of the async.js API to use Promises instead of callbacks.
 
 ## Missing Implementations
