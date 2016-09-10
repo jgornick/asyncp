@@ -38,9 +38,10 @@
     "build": "npm run build:dist",
     "build:dist": "gulp",
     "coverage": "nyc npm run mocha-node-test",
-    "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint src/",
     "mocha-node-test": "mocha --compilers js:babel-register test/",
-    "test": "npm run lint && npm run mocha-node-test"
+    "test": "npm run lint && npm run mocha-node-test",
+    "test-travis": "npm run lint && npm run coverage"
   }
 }
