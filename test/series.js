@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 
 describe('series', function() {
     it('does mixed tasks (delayed, Promise, native)', function() {

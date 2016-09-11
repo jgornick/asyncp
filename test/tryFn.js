@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 
 describe('tryFn', function() {
     it('returns a promise', function() {

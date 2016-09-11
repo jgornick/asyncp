@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 
 describe('doWhilst', function() {
     it('supports delayed task and delayed condition', function() {

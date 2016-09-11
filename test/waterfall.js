@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 
 describe('waterfall', function() {
     it('does mixed tasks (delayed, Promise, native)', function() {

@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 import {
     iterateeDelayWithOrder,
     iterateePromiseWithOrder,

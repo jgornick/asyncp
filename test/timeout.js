@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 import { delayedTask, promiseTask, nativeTask } from './helper';
 
 describe('timeout', function() {

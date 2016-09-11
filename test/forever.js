@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 
 describe('forever', function() {
     it('supports delayed task with rejection', function() {

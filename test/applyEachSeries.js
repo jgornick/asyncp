@@ -1,4 +1,4 @@
-import async from '../src/async';
+import async from '../src/asyncp';
 
 describe('applyEachSeries', function() {
     function addDelayed(order, x) {
