@@ -96,5 +96,6 @@ build/Release
 node_modules
 
 # asyncp
+dist/**/*
 .coveralls.yml
 .nyc_output
