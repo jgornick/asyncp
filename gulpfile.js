@@ -3,20 +3,7 @@ const babel = require('gulp-babel');
 const del = require('del');
 const bump = require('gulp-bump');
 const spawn = require('child_process').spawn;
-const git = require('gulp-git');
-
-['major', 'minor', 'patch'].forEach(function(version) {
-    gulp.task(`bump:${version}`, function() {
-        gulp.src('./package.json')
-            .pipe(bump({ type: version }))
-            .pipe(gulp.dest('./'));
-    });
-
-    gulp.task(`release:${version}`, [`bump:${version}`, 'tag:release', 'npm:publish']);
-});
-
-gulp.task('bump', ['bump:patch']);
-gulp.task('release', ['build:dist', 'bump:patch', 'tag:release', 'npm:publish']);
+const git = require('gulp-git-streamed');
 
 gulp.task('tag:release', function(done) {
     var pkg = require('./package.json');
@@ -82,6 +69,16 @@ gulp.task('npm:publish', ['tar:dist'], function(done) {
     });
 });
 
+['major', 'minor', 'patch'].forEach(function(version) {
+    gulp.task(`bump:${version}`, function() {
+        gulp.src('./package.json')
+            .pipe(bump({ type: version }))
+            .pipe(gulp.dest('./'));
+    });
+
+    gulp.task(`release:${version}`, [`bump:${version}`, 'tag:release', 'npm:publish']);
+});
+
 gulp.task('clean:dist', function() {
     return del([
         'dist/**/*'
@@ -99,4 +96,6 @@ gulp.task('build:dist', ['clean:dist'], function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('bump', ['bump:patch']);
+gulp.task('release', ['build:dist', 'release:patch']);
 gulp.task('default', ['build:dist']);
