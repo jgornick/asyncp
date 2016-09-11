@@ -13,7 +13,7 @@ gulp.task('tag:release', function(done) {
     return gulp.src('./')
         .pipe(git.add({ args: '-u' }))
         .pipe(git.commit(message))
-        .pipe(git.tag(pkg.version, message))
+        .pipe(git.tag(pkg.version, message, { args: '--force' }))
         .pipe(git.push('origin', 'master', { args: '--tags' }))
         .pipe(gulp.dest('./'));
 });
