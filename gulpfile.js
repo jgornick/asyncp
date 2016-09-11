@@ -26,7 +26,7 @@ gulp.task('tag:release', function(done) {
         .pipe(git.add({ args: '-u' }))
         .pipe(git.commit(message))
         .pipe(git.tag(pkg.version, message))
-        .pipe(git.push('origin', 'master', '--tags'))
+        .pipe(git.push('origin', 'master', { args: '--tags' }))
         .pipe(gulp.dest('./'));
 });
 
