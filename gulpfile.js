@@ -4,6 +4,7 @@ const del = require('del');
 const bump = require('gulp-bump');
 const spawn = require('child_process').spawn;
 const git = require('gulp-git-streamed');
+const runSequence = require('run-sequence');
 
 gulp.task('tag:release', function(done) {
     var pkg = require('./package.json');
@@ -76,7 +77,14 @@ gulp.task('npm:publish', ['tar:dist'], function(done) {
             .pipe(gulp.dest('./'));
     });
 
-    gulp.task(`release:${version}`, [`bump:${version}`, 'tag:release', 'npm:publish']);
+    gulp.task(`release:${version}`, function(done) {
+        runSequence(
+            `bump:${version}`,
+            'tag:release',
+            'npm:publish',
+            done
+        );
+    });
 });
 
 gulp.task('clean:dist', function() {
@@ -97,5 +105,7 @@ gulp.task('build:dist', ['clean:dist'], function () {
 });
 
 gulp.task('bump', ['bump:patch']);
-gulp.task('release', ['build:dist', 'release:patch']);
+gulp.task('release', function(done) {
+    runSequence('build:dist', 'release:patch');
+});
 gulp.task('default', ['build:dist']);

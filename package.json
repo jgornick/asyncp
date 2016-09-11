@@ -41,7 +41,8 @@
     "gulp-git-streamed": "^1.8.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
-    "nyc": "^8.1.0"
+    "nyc": "^8.1.0",
+    "run-sequence": "^1.2.2"
   },
   "scripts": {
     "build": "npm run build:dist",
