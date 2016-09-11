@@ -1,3 +1,5 @@
+'use strict';
+
 require('babel-core/register');
 
 const path = require('path');
