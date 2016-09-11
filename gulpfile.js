@@ -3,6 +3,7 @@ const babel = require('gulp-babel');
 const del = require('del');
 const bump = require('gulp-bump');
 const spawn = require('child_process').spawn;
+const git = require('gulp-git');
 
 ['major', 'minor', 'patch'].forEach(function(version) {
     gulp.task(`bump:${version}`, function() {
@@ -22,10 +23,11 @@ gulp.task('tag:release', function(done) {
     var message = `Release ${pkg.version}`;
 
     return gulp.src('./')
-      .pipe(git.commit(message))
-      .pipe(git.tag(pkg.version, message))
-      .pipe(git.push('origin', 'master', '--tags'))
-      .pipe(gulp.dest('./'));
+        .pipe(git.add({ args: '-u' }))
+        .pipe(git.commit(message))
+        .pipe(git.tag(pkg.version, message))
+        .pipe(git.push('origin', 'master', '--tags'))
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('clean:tar', function() {
