@@ -1,10 +1,101 @@
-var gulp = require('gulp');
-var babel = require('gulp-babel');
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+const del = require('del');
+const bump = require('gulp-bump');
+const spawn = require('child_process').spawn;
 
-gulp.task('default', function () {
+['major', 'minor', 'patch'].forEach(function(version) {
+    gulp.task(`bump:${version}`, function() {
+        gulp.src('./package.json')
+            .pipe(bump({ type: version }))
+            .pipe(gulp.dest('./'));
+    });
+
+    gulp.task(`release:${version}`, [`bump:${version}`, 'tag:release', 'npm:publish']);
+});
+
+gulp.task('bump', ['bump:patch']);
+gulp.task('release', ['build:dist', 'bump:patch', 'tag:release', 'npm:publish']);
+
+gulp.task('tag:release', function(done) {
+    var pkg = require('./package.json');
+    var message = `Release ${pkg.version}`;
+
+    return gulp.src('./')
+      .pipe(git.commit(message))
+      .pipe(git.tag(pkg.version, message))
+      .pipe(git.push('origin', 'master', '--tags'))
+      .pipe(gulp.dest('./'));
+});
+
+gulp.task('clean:tar', function() {
+    return del([ '/tmp/asyncp.tar.gz' ], { force: true });
+});
+
+gulp.task('tar:dist', ['clean:tar'], function(done) {
+    let tar = spawn(
+        'tar',
+        [
+            '--exclude=".DS_*"',
+            '-czvf', '/tmp/asyncp.tar.gz',
+            '-C', './', 'package.json',
+            '-C', './dist', '.'
+        ],
+        {
+            stdio: 'inherit',
+            env: {
+                COPYFILE_DISABLE: 1
+            }
+        }
+    );
+
+    tar.on('close', function(code) {
+        if (code != 0) {
+            return done(new Error(`Received code ${code} from tar command.`));
+        }
+
+        done();
+    });
+});
+
+gulp.task('npm:publish', ['tar:dist'], function(done) {
+    return done();
+
+    let npm = spawn(
+        'npm',
+        [
+            'publish',
+            '/tmp/asyncp.tar.gz'
+        ],
+        {
+            stdio: 'inherit'
+        }
+    );
+
+    npm.on('close', function(code) {
+        if (code != 0) {
+            return done(new Error(`Received code ${code} from npm publish.`));
+        }
+
+        done();
+    });
+});
+
+gulp.task('clean:dist', function() {
+    return del([
+        'dist/**/*'
+    ]);
+});
+
+gulp.task('build:dist', ['clean:dist'], function () {
     return gulp.src('src/*.js')
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: [
+                'add-module-exports'
+            ]
         }))
         .pipe(gulp.dest('dist'));
 });
+
+gulp.task('default', ['build:dist']);
