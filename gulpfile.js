@@ -40,7 +40,8 @@ gulp.task('tar:dist', ['clean:tar'], function(done) {
         [
             '--exclude=".DS_*"',
             '-czvf', '/tmp/asyncp.tar.gz',
-            '-C', './', 'package.json',
+            './package.json',
+            './README.md',
             '-C', './dist', '.'
         ],
         {
@@ -61,8 +62,6 @@ gulp.task('tar:dist', ['clean:tar'], function(done) {
 });
 
 gulp.task('npm:publish', ['tar:dist'], function(done) {
-    return done();
-
     let npm = spawn(
         'npm',
         [
