@@ -72,7 +72,7 @@ gulp.task('npm:publish', ['tar:dist'], function(done) {
 
 ['major', 'minor', 'patch'].forEach(function(version) {
     gulp.task(`bump:${version}`, function() {
-        gulp.src('./package.json')
+        return gulp.src('./package.json')
             .pipe(bump({ type: version }))
             .pipe(gulp.dest('./'));
     });
