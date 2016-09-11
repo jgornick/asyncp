@@ -1,10 +1,20 @@
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const del = require('del');
-const bump = require('gulp-bump');
+require('babel-core/register');
+
+const path = require('path');
 const spawn = require('child_process').spawn;
+
+const babel = require('gulp-babel');
+const bump = require('gulp-bump');
+const coveralls = require('gulp-coveralls');
+const del = require('del');
+const eslint = require('gulp-eslint');
 const git = require('gulp-git-streamed');
+const gulp = require('gulp');
+const istanbul = require('gulp-istanbul');
+const mocha = require('gulp-mocha');
+const plumber = require('gulp-plumber');
 const runSequence = require('run-sequence');
+const isparta = require('isparta');
 
 gulp.task('tag:release', function(done) {
     var pkg = require('./package.json');
@@ -105,8 +115,52 @@ gulp.task('build:dist', ['clean:dist'], function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('lint', function() {
+    return gulp.src([
+        'src/**/*.js'
+    ])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+gulp.task('test:pre', ['lint'], function() {
+    return gulp.src([
+        'src/**/*.js'
+    ])
+        .pipe(istanbul({
+            instrumenter: isparta.Instrumenter,
+            includeUntested: true
+        }))
+        .pipe(istanbul.hookRequire());
+});
+
+gulp.task('test', ['test:pre'], function(done) {
+    let mochaError;
+
+    gulp.src('test/**/*.js')
+        .pipe(plumber())
+        .pipe(mocha({ reporter: 'spec', timeout: 3000 }))
+        .on('error', function(error) {
+            mochaError = error;
+        })
+        .pipe(istanbul.writeReports())
+        .on('end', function() {
+            done(mochaError);
+        });
+});
+
+gulp.task('coveralls', ['test'], function() {
+    if (!process.env.CI) {
+        return;
+    }
+
+    return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
+        .pipe(coveralls());
+});
+
 gulp.task('bump', ['bump:patch']);
 gulp.task('release', function(done) {
-    runSequence('build:dist', 'release:patch');
+    runSequence('build:dist', 'release:patch', done);
 });
 gulp.task('default', ['build:dist']);
