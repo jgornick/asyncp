@@ -30,6 +30,7 @@ gulp.task('tar:dist', ['clean:tar'], function(done) {
             '-czvf', '/tmp/asyncp.tar.gz',
             './package.json',
             './README.md',
+            './LICENSE',
             '-C', './dist', '.'
         ],
         {
