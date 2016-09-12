@@ -3,6 +3,12 @@
         "es2015"
     ],
     "plugins": [
+        [
+            "babel-plugin-transform-builtin-extend",
+            {
+                "globals": ["Error", "Array"]
+            }
+        ],
         "add-module-exports"
     ]
 }

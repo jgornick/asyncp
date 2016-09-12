@@ -1,8 +1,6 @@
-module.exports = function WaterfallError(message, results) {
-    Error.captureStackTrace(this, this.constructor);
-    this.name = this.constructor.name;
-    this.message = message;
-    this.results = results;
+export default class WaterfallError extends Error {
+    constructor(message, results) {
+        super(message);
+        this.results = results;
+    }
 };
-
-require('util').inherits(module.exports, Error);
