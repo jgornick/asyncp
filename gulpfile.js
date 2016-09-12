@@ -23,6 +23,7 @@ gulp.task('tag:release', function(done) {
     var message = `Release ${pkg.version}`;
 
     return gulp.src('./')
+        .pipe(plumber())
         .pipe(git.add({ args: '-u' }))
         .pipe(git.commit(message))
         .pipe(git.tag(pkg.version, message, { args: '--force' }))
@@ -86,6 +87,7 @@ gulp.task('npm:publish', ['tar:dist'], function(done) {
 ['major', 'minor', 'patch'].forEach(function(version) {
     gulp.task(`bump:${version}`, function() {
         return gulp.src('./package.json')
+            .pipe(plumber())
             .pipe(bump({ type: version }))
             .pipe(gulp.dest('./'));
     });
@@ -108,28 +110,22 @@ gulp.task('clean:dist', function() {
 
 gulp.task('build:dist', ['clean:dist'], function () {
     return gulp.src('src/*.js')
-        .pipe(babel({
-            presets: ['es2015'],
-            plugins: [
-                'add-module-exports'
-            ]
-        }))
+        .pipe(plumber())
+        .pipe(babel())
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('lint', function() {
-    return gulp.src([
-        'src/**/*.js'
-    ])
+    return gulp.src('src/**/*.js')
+        .pipe(plumber())
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
 
 gulp.task('test:pre', ['lint'], function() {
-    return gulp.src([
-        'src/**/*.js'
-    ])
+    return gulp.src('src/**/*.js')
+        .pipe(plumber())
         .pipe(istanbul({
             instrumenter: isparta.Instrumenter,
             includeUntested: true
@@ -157,7 +153,7 @@ gulp.task('coveralls', ['test'], function() {
         return;
     }
 
-    return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
+    return gulp.src('coverage/lcov.info')
         .pipe(coveralls());
 });
 
