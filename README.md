@@ -6,7 +6,7 @@ asyncp is a port of the [async](https://github.com/caolan/async) library to use 
 
 ## Installation
 
-```
+```bash
 npm install asyncp
 ```
 
@@ -22,7 +22,7 @@ Another benefit of asyncp is that it uses the native Promise implementation. Thi
 
 ## Usage
 
-```
+```js
 const async = require('asyncp');
 const p = async.map([1, 2, 3], value => {
     switch (value) {
@@ -43,7 +43,7 @@ p.then(console.log); // [1, 2, 3];
 
 Or, you can require/import individual functions:
 
-```
+```js
 const map = require('asyncp/map');
 const p = map([1, 2, 3], value => {
     switch (value) {
