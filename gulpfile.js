@@ -12,11 +12,11 @@ const del = require('del');
 const eslint = require('gulp-eslint');
 const git = require('gulp-git-streamed');
 const gulp = require('gulp');
+const isparta = require('isparta');
 const istanbul = require('gulp-istanbul');
 const mocha = require('gulp-mocha');
 const plumber = require('gulp-plumber');
 const runSequence = require('run-sequence');
-const isparta = require('isparta');
 
 gulp.task('tag:release', function(done) {
     var pkg = require('./package.json');
@@ -108,11 +108,35 @@ gulp.task('clean:dist', function() {
     ]);
 });
 
-gulp.task('build:dist', ['clean:dist'], function () {
+gulp.task('rollup', function(done) {
+    let rollup = spawn(
+        './node_modules/.bin/rollup',
+        [
+            '-c'
+        ],
+        {
+            stdio: 'inherit'
+        }
+    );
+
+    rollup.on('close', function(code) {
+        if (code != 0) {
+            return done(new Error(`Received code ${code} from rollup.`));
+        }
+
+        done();
+    });
+});
+
+gulp.task('babel', function() {
     return gulp.src('src/*.js')
         .pipe(plumber())
         .pipe(babel())
         .pipe(gulp.dest('dist'));
+})
+
+gulp.task('build:dist', function(done) {
+    runSequence('clean:dist', 'babel', 'rollup', done);
 });
 
 gulp.task('lint', function() {
