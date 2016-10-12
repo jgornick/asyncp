@@ -86,6 +86,20 @@ describe('eachOf', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const coll = {a: 1, b: 3, c: 2};
+        const p = async.eachOf(
+            new Promise(resolve => setTimeout(resolve.bind(null, coll), 25)),
+            iterateeDelayWithOrder(order)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal(coll),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
+    });
+
+
     it('supports empty collections', function() {
         const p = async.eachOf({}, () => assert(false, 'iteratee should not be called'));
 
@@ -118,9 +132,9 @@ describe('eachOf', function() {
         delete coll.d;
 
         return Promise.all([
-            p.should.eventually.deep.equal({a: 4, b: 3, c: 2, d: 1}),
+            p.should.eventually.deep.equal({a: 0, b: 3, c: 2}),
             p.then(() => coll.should.deep.equal({a: 0, b: 3, c: 2})),
-            p.then(() => order.should.deep.equal([4, 1, 2, 3]))
+            p.then(() => order.should.deep.equal([0, 2, 3]))
         ]);
     });
 

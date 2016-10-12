@@ -1,11 +1,12 @@
 import throat from 'throat';
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function eachOfLimit(collection, limit, iteratee) {
+export default promised(function eachOfLimit(collection, limit, iteratee) {
     if (! limit > 0) {
         return Promise.reject(new Error('Limit must be a number greater than 0.'));
     }
-        
+
     const keys = Object.keys(collection);
     const values = keys.map(key => collection[key]);
     return Promise.all(
@@ -20,4 +21,4 @@ export default function eachOfLimit(collection, limit, iteratee) {
             },
             {}
         ));
-};
+});
