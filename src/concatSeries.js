@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function concatSeries(collection, iteratee) {
+export default promised(function concatSeries(collection, iteratee) {
     return collection.reduce(
         (promise, item, index, collection) => promise.then((results) => {
             return tryFn(iteratee, item, index, collection)
@@ -8,4 +9,4 @@ export default function concatSeries(collection, iteratee) {
         }),
         Promise.resolve([])
     );
-};
+});

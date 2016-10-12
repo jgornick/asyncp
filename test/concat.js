@@ -106,6 +106,19 @@ describe('concat', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const p = async.concat(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order, x => [x, x + 1])
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal([1, 2, 3, 4, 2, 3]),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.concat([], () => assert(false, 'iteratee should not be called'));
 
@@ -149,9 +162,9 @@ describe('concat', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([4, 5, 3, 4, 2, 3, 1, 2]),
+            p.should.eventually.deep.equal([3, 4, 2, 3]),
             p.then(() => arr.should.deep.equal([3, 2])),
-            p.then(() => order.should.deep.equal([4, 1, 2, 3]))
+            p.then(() => order.should.deep.equal([2, 3]))
         ]);
     });
 
