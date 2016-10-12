@@ -101,6 +101,20 @@ describe('everySeries', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 2, 1];
+        const p = async.everySeries(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order, (x) => x >= 1)
+        );
+
+        return Promise.all([
+            p.should.eventually.equal(true),
+            p.then(() => order.should.deep.equal(arr))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.everySeries([], () => assert(false, 'iteratee should not be called'));
 
@@ -136,7 +150,7 @@ describe('everySeries', function() {
             p.should.eventually.equal(true),
             p.then(() => arr.should.deep.equal([3, 2])),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([4, 3, 2, 1])),
+                () => resolve(order.should.deep.equal([3, 2])),
                 6 * 25
             ))
         ]);
