@@ -121,6 +121,24 @@ describe('someLimit', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 2, 1];
+        const p = async.someLimit(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            2,
+            iterateeDelayWithOrder(order, (x) => x == 3)
+        );
+
+        return Promise.all([
+            p.should.eventually.equal(true),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal([2, 3, 1])),
+                5 * 25
+            ))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.someLimit([], 2, () => assert(false, 'iteratee should not be called'));
 
@@ -184,7 +202,7 @@ describe('someLimit', function() {
             p.should.eventually.equal(true),
             p.then(() => arr.should.deep.equal([3, 2])),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([4, 2, 1, 3])),
+                () => resolve(order.should.deep.equal([2, 3])),
                 7 * 25
             ))
         ]);
