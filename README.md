@@ -80,6 +80,7 @@ The following functions in [async](https://github.com/caolan/async) are missing 
 * [```autoInject```](http://caolan.github.io/async/docs.html#.autoInject)
 * [```cargo```](http://caolan.github.io/async/docs.html#.cargo)
 * [```priorityQueue```](http://caolan.github.io/async/docs.html#.priorityQueue)
+* [```race```](http://caolan.github.io/async/docs.html#.race) => Use [Promise.race](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race).
 * [```queue```](http://caolan.github.io/async/docs.html#.queue)
 
 ### Utils
@@ -92,9 +93,9 @@ The following functions in [async](https://github.com/caolan/async) are missing 
 * [```log```](http://caolan.github.io/async/docs.html#.log)
 * [```memoize```](http://caolan.github.io/async/docs.html#.memoize) => Use [lodash#memoize](https://lodash.com/docs#memoize)
 * [```nextTick```](http://caolan.github.io/async/docs.html#.nextTick)
-* [```race```](http://caolan.github.io/async/docs.html#.race) => Use [Promise.race](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race).
 * [```reflectAll```](http://caolan.github.io/async/docs.html#.reflectAll)
 * [```reflect```](http://caolan.github.io/async/docs.html#.reflect)
+* [```setImmediate```](http://caolan.github.io/async/docs.html#.setImmediate)
 * [```unmemoize```](http://caolan.github.io/async/docs.html#.unmemoize)
 
 ## "Gotchas"
