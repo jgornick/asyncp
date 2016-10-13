@@ -1,7 +1,8 @@
 import tryFn from './tryFn';
+import promised from './promised';
 import WaterfallError from './waterfallError';
 
-export default function waterfall(tasks, ...args) {
+export default promised(function waterfall(tasks, ...args) {
     if (!Array.isArray(tasks)) {
         return Promise.reject(new Error('First argument to waterfall must be an array of functions'))
     }
@@ -27,4 +28,4 @@ export default function waterfall(tasks, ...args) {
         .catch((error) => {
             throw new WaterfallError(error.message, results);
         });
-};
+});

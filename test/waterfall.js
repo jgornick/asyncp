@@ -29,6 +29,38 @@ describe('waterfall', function() {
         ]);
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const tasks = [
+            (arg0, arg1) => new Promise(resolve => setTimeout(_ => {
+                order.push(1);
+                arg0.should.equal(0, 'assertion failed for waterfall task arguments');
+                arg1.should.equal(1, 'assertion failed for waterfall task arguments');
+                resolve(arg1)
+            }, 25)),
+            arg1 => {
+                order.push(2);
+                arg1.should.equal(1, 'assertion failed for waterfall task arguments');
+                return new Promise(resolve => resolve([1 + arg1, 2 + arg1]))
+            },
+            (arg2, arg3) => {
+                order.push(3);
+                arg2.should.equal(2, 'assertion failed for waterfall task arguments');
+                arg3.should.equal(3, 'assertion failed for waterfall task arguments');
+                return 1 + arg2 + arg3;
+            }
+        ];
+        const p = async.waterfall(
+            new Promise(resolve => setTimeout(resolve.bind(null, tasks), 25)),
+            Promise.resolve(0),
+            Promise.resolve(1)
+        );
+        return Promise.all([
+            p.should.eventually.equal(6),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.waterfall([]);
         return Promise.all([
