@@ -136,7 +136,7 @@ gulp.task('babel', function() {
 })
 
 gulp.task('build:dist', function(done) {
-    runSequence('clean:dist', 'babel', 'rollup', done);
+    runSequence('clean:dist', 'babel', done);
 });
 
 gulp.task('lint', function() {

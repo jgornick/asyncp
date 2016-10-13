@@ -1,6 +1,6 @@
 {
   "name": "asyncp",
-  "version": "0.7.8",
+  "version": "0.8.0",
   "description": "Async.js for Promises",
   "homepage": "https://github.com/jgornick/asyncp",
   "keywords": [
