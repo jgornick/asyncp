@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function until(condition, task, ...args) {
+export default promised(function until(condition, task, ...args) {
     return tryFn(condition, ...args)
         .then((conditionResult) => {
             return conditionResult
@@ -11,4 +12,4 @@ export default function until(condition, task, ...args) {
                         : until(condition, task, result)
                 );
         });
-};
+});
