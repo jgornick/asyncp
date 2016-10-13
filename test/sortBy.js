@@ -96,6 +96,19 @@ describe('sortBy', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const p = async.sortBy(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal([1, 2, 3]),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.sortBy([], () => assert(false, 'iteratee should not be called'));
 
@@ -139,9 +152,9 @@ describe('sortBy', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([1, 2, 3, 4]),
+            p.should.eventually.deep.equal([2, 3]),
             p.then(() => arr.should.deep.equal([3, 2])),
-            p.then(() => order.should.deep.equal([4, 1, 2, 3]))
+            p.then(() => order.should.deep.equal([2, 3]))
         ]);
     });
 

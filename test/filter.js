@@ -130,6 +130,24 @@ describe('filter', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 2, 1];
+        const p = async.filter(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order, (x) => x == 2)
+        );
+
+        return Promise.all([
+            p.should.eventually.deep.equal([2]),
+            p.then(() => arr.should.deep.equal([3, 2, 1])),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal([1, 2, 3])),
+                5 * 25
+            ))
+        ]);
+    });
+
     it('supports not found', function() {
         const p = async.filter([1, 2, 3], () => false);
 
@@ -170,10 +188,10 @@ describe('filter', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([2, 1]),
+            p.should.eventually.deep.equal([2]),
             p.then(() => arr.should.deep.equal([3, 2])),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([4, 1, 2, 3])),
+                () => resolve(order.should.deep.equal([2, 3])),
                 5 * 25
             ))
         ]);

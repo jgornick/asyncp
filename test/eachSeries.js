@@ -87,6 +87,20 @@ describe('eachSeries', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const p = async.eachSeries(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal(arr),
+            p.then(() => order.should.deep.equal(arr))
+        ]);
+    });
+
+
     it('supports empty collections', function() {
         const p = async.eachSeries([], () => assert(false, 'iteratee should not be called'));
 
@@ -130,9 +144,9 @@ describe('eachSeries', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([4, 3, 2, 1]),
+            p.should.eventually.deep.equal([3, 2]),
             p.then(() => arr.should.deep.equal([3, 2])),
-            p.then(() => order.should.deep.equal([4, 3, 2, 1]))
+            p.then(() => order.should.deep.equal([3, 2]))
         ]);
     });
 

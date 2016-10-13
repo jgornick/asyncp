@@ -55,6 +55,7 @@ import mapValuesLimit from './mapValuesLimit';
 import mapValuesSeries from './mapValuesSeries';
 import parallel from './parallel';
 import parallelLimit from './parallelLimit';
+import promised from './promised';
 import reduce from './reduce';
 import reduceRight from './reduceRight';
 import reject from './reject';
@@ -139,6 +140,7 @@ export default {
     mapValuesSeries,
     parallel,
     parallelLimit,
+    promised,
     reduce,
     reduceRight,
     reject,

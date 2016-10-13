@@ -123,6 +123,24 @@ describe('detect', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 2, 1];
+        const p = async.detect(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order, (x) => x == 2)
+        );
+
+        return Promise.all([
+            p.should.eventually.equal(2),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal([1, 2, 3])),
+                5 * 25
+            ))
+        ]);
+    });
+
+
     it('supports not found', function() {
         const p = async.detect([1, 2, 3], () => false);
 
@@ -182,7 +200,7 @@ describe('detect', function() {
             p.should.eventually.equal(2),
             p.then(() => arr.should.deep.equal([3, 2])),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([4, 1, 2, 3])),
+                () => resolve(order.should.deep.equal([2, 3])),
                 5 * 25
             ))
         ]);

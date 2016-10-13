@@ -86,6 +86,21 @@ describe('eachOfLimit', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const coll = {a: 1, b: 4, c: 2};
+        const p = async.eachOfLimit(
+            new Promise(resolve => setTimeout(resolve.bind(null, coll), 25)),
+            2,
+            iterateeDelayWithOrder(order)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal(coll),
+            p.then(() => order.should.deep.equal([1, 2, 4]))
+        ]);
+    });
+
+
     it('supports empty collections', function() {
         const p = async.eachOfLimit({}, 2, () => assert(false, 'iteratee should not be called'));
 
@@ -140,9 +155,9 @@ describe('eachOfLimit', function() {
         delete coll.d;
 
         return Promise.all([
-            p.should.eventually.deep.equal({a: 4, b: 3, c: 2, d: 1}),
+            p.should.eventually.deep.equal({a: 0, b: 3, c: 2}),
             p.then(() => coll.should.deep.equal({a: 0, b: 3, c: 2})),
-            p.then(() => order.should.deep.equal([4, 2, 1, 3]))
+            p.then(() => order.should.deep.equal([0, 2, 3]))
         ]);
     });
 

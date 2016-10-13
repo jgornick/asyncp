@@ -77,6 +77,26 @@ describe('parallelLimit', function() {
         ]);
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 1, 2, 1, 2];
+        const tasks = arr.map(indexValue =>
+            delayedWithOrder(order, indexValue, (value, index) => {
+                value.should.equal(0);
+                return index;
+            })
+        );
+        const p = async.parallelLimit(
+            new Promise(resolve => setTimeout(resolve.bind(null, tasks), 25)),
+            Promise.resolve(2),
+            Promise.resolve(0)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal(arr),
+            p.then(() => order.should.deep.equal([1, 3, 2, 1, 2]))
+        ]);
+    });
+
     it('supports empty tasks', function() {
         const p = async.parallelLimit([], 2, () => assert(false, 'iteratee should not be called'));
 
@@ -155,9 +175,9 @@ describe('parallelLimit', function() {
         tasks.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([4, 3, 2, 1]),
+            p.should.eventually.deep.equal([3, 2]),
             p.then(() => tasks.should.have.length(2)),
-            p.then(() => order.should.deep.equal([4, 2, 1, 3]))
+            p.then(() => order.should.deep.equal([2, 3]))
         ]);
     });
 

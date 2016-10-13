@@ -1,7 +1,8 @@
 import tryFn from './tryFn';
+import promised from './promised';
 import PromiseBreak from './promiseBreak';
 
-export default function detectSeries(collection, predicate, notFound = undefined) {
+export default promised(function detectSeries(collection, predicate, notFound = undefined) {
     return collection.reduce(
         (promise, item, index, collection) => {
             return promise.then(() => {
@@ -23,4 +24,4 @@ export default function detectSeries(collection, predicate, notFound = undefined
             }
             throw error;
         });
-};
+});

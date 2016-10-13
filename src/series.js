@@ -1,6 +1,7 @@
 import tryFn from './tryFn'
+import promised from './promised';
 
-export default function series(tasks, ...args) {
+export default promised(function series(tasks, ...args) {
     if (!Array.isArray(tasks)) {
         return Promise.reject(new Error('First argument to series must be an array of functions'))
     }
@@ -15,4 +16,4 @@ export default function series(tasks, ...args) {
         }),
         Promise.resolve([])
     );
-};
+});

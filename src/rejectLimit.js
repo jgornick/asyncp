@@ -1,9 +1,10 @@
 import throat from 'throat';
 import tryFn from './tryFn';
+import promised from './promised';
 
 const ASYNCP_UNDEFINED = '__ASYNCP_UNDEFINED__';
 
-export default function rejectLimit(collection, limit, predicate) {
+export default promised(function rejectLimit(collection, limit, predicate) {
     if (! limit > 0) {
         return Promise.reject(new Error('Limit must be a number greater than 0.'));
     }
@@ -13,4 +14,4 @@ export default function rejectLimit(collection, limit, predicate) {
             .then(result => result === true ? ASYNCP_UNDEFINED : item)
     )))
         .then(results => results.filter(item => item != ASYNCP_UNDEFINED));
-};
+});

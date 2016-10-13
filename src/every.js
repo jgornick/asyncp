@@ -1,7 +1,8 @@
 import tryFn from './tryFn';
+import promised from './promised';
 import PromiseBreak from './promiseBreak';
 
-export default function every(collection, predicate) {
+export default promised(function every(collection, predicate) {
     return Promise.all(collection.map((...args) => {
         return tryFn(predicate, ...args)
             .then((result) => {
@@ -18,4 +19,4 @@ export default function every(collection, predicate) {
             }
             throw error;
         });
-};
+});

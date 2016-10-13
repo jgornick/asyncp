@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function eachOfSeries(collection, iteratee) {
+export default promised(function eachOfSeries(collection, iteratee) {
     return Object.keys(collection).reduce(
         (promise, key) => {
             let collectionValue = collection[key];
@@ -14,4 +15,4 @@ export default function eachOfSeries(collection, iteratee) {
         },
         Promise.resolve({})
     );
-};
+});

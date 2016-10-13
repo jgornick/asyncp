@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function sortBy(collection, iteratee, comparator) {
+export default promised(function sortBy(collection, iteratee, comparator) {
     if (comparator == null) {
         comparator = (a, b) => a < b ? -1 : a > b ? 1 : 0;
     }
@@ -10,4 +11,4 @@ export default function sortBy(collection, iteratee, comparator) {
             .then((result) => [result, item])
     ))
         .then((results) => results.sort(([a], [b]) => comparator(a, b)).map(([_, item]) => item));
-};
+});

@@ -1,7 +1,8 @@
 import tryFn from './tryFn';
+import promised from './promised';
 import PromiseBreak from './promiseBreak';
 
-export default function detect(collection, predicate, notFound = undefined) {
+export default promised(function detect(collection, predicate, notFound = undefined) {
     return Promise.all(collection.map((item, index, collection) => {
         return tryFn(predicate, item, index, collection)
             .then((result) => {
@@ -18,4 +19,4 @@ export default function detect(collection, predicate, notFound = undefined) {
             }
             throw error;
         });
-};
+});

@@ -170,16 +170,20 @@ describe('retryable', function() {
         ]);
     });
 
-    it('throws with invalid times value', function(done) {
-        expect(async.retryable('foo', delayedTask(1, failTask)))
-            .to.throw(Error, `Invalid times option value of "foo"`)
-        done();
+    it('rejects with invalid times value', function() {
+        const f = async.retryable('foo', delayedTask(1, failTask));
+        const p = f();
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error, `Invalid times option value of "foo"`)
+        ]);
     });
 
-    it('throws with invalid times option', function(done) {
-        expect(async.retryable({ times: 'foo' }, delayedTask(1, failTask)))
-            .to.throw(Error, `Invalid times option value of "foo"`)
-        done();
+    it('throws with invalid times option', function() {
+        const f = async.retryable({ times: 'foo' }, delayedTask(1, failTask));
+        const p = f();
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error, `Invalid times option value of "foo"`)
+        ]);
     });
 
 });

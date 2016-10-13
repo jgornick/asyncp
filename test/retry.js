@@ -160,15 +160,32 @@ describe('retry', function() {
         ]);
     });
 
-    it('throws with invalid times value', function(done) {
-        expect(async.retry.bind(null, 'foo', delayedTask(1, failTask)))
-            .to.throw(Error, `Invalid times option value of "foo"`)
-        done();
+    it('supports promised arguments', function() {
+        let order = [];
+        let counter = { count: 0 };
+        const p = async.retry(
+            Promise.resolve(delayedTask(1, successTask)),
+            new Promise(resolve => setTimeout(resolve.bind(null, order), 25)),
+            new Promise(resolve => setTimeout(resolve.bind(null, counter), 25))
+        );
+
+        return Promise.all([
+            p.should.eventually.deep.equal(3),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
     });
 
-    it('throws with invalid times option', function(done) {
-        expect(async.retry.bind(null, { times: 'foo' }, delayedTask(1, failTask)))
-            .to.throw(Error, `Invalid times option value of "foo"`)
-        done();
+    it('rejects with invalid times value', function() {
+        const p = async.retry('foo', delayedTask(1, failTask));
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error, `Invalid times option value of "foo"`)
+        ]);
+    });
+
+    it('rejects with invalid times option', function() {
+        const p = async.retry({ times: 'foo' }, delayedTask(1, failTask));
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error, `Invalid times option value of "foo"`)
+        ]);
     });
 });

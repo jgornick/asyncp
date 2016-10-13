@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function filterSeries(collection, predicate) {
+export default promised(function filterSeries(collection, predicate) {
     return collection.reduce(
         (promise, item, index, collection) => {
             return promise.then((results) => {
@@ -15,4 +16,4 @@ export default function filterSeries(collection, predicate) {
         },
         Promise.resolve([])
     );
-};
+});

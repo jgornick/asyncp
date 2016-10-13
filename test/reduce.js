@@ -89,6 +89,20 @@ describe('reduce', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const p = async.reduce(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            Promise.resolve(0),
+            accIterateeDelayWithOrder(order, (acc, x) => acc + x)
+        );
+        return Promise.all([
+            p.should.eventually.equal(6),
+            p.then(() => order.should.deep.equal(arr))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.reduce([], 0, () => assert(false, 'iteratee should not be called'));
 
@@ -132,9 +146,9 @@ describe('reduce', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.equal(10),
+            p.should.eventually.equal(5),
             p.then(() => arr.should.deep.equal([3, 2])),
-            p.then(() => order.should.deep.equal([4, 3, 2, 1]))
+            p.then(() => order.should.deep.equal([3, 2]))
         ]);
     });
 

@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function timesSeries(n, iteratee, ...args) {
+export default promised(function timesSeries(n, iteratee, ...args) {
     return new Array(n).fill()
         .reduce(
             (promise, item, index) => {
@@ -14,4 +15,4 @@ export default function timesSeries(n, iteratee, ...args) {
             },
             Promise.resolve([])
         );
-};
+});

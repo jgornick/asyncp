@@ -1,7 +1,8 @@
 import tryFn from './tryFn';
+import promised from './promised';
 import PromiseBreak from './promiseBreak';
 
-export default function everySeries(collection, predicate) {
+export default promised(function everySeries(collection, predicate) {
     return collection.reduce(
         (promise, ...args) => {
             return promise.then(() => {
@@ -23,4 +24,4 @@ export default function everySeries(collection, predicate) {
             }
             throw error;
         });
-};
+});

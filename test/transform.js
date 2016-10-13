@@ -110,6 +110,19 @@ describe('transform', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const p = async.transform(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            accIterateeDelayWithOrder(order, (acc, x) => acc.push(x + 1))
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal([2, 4, 3]),
+            p.then(() => order.should.deep.equal(arr))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.transform([], () => assert(false, 'iteratee should not be called'));
 
@@ -166,9 +179,9 @@ describe('transform', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([5, 4, 3, 2]),
+            p.should.eventually.deep.equal([4, 3]),
             p.then(() => arr.should.deep.equal([3, 2])),
-            p.then(() => order.should.deep.equal([4, 3, 2, 1]))
+            p.then(() => order.should.deep.equal([3, 2]))
         ]);
     });
 

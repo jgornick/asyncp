@@ -130,6 +130,24 @@ describe('reject', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 2, 1];
+        const p = async.reject(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order, (x) => x == 2)
+        );
+
+        return Promise.all([
+            p.should.eventually.deep.equal([3, 1]),
+            p.then(() => arr.should.deep.equal([3, 2, 1])),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal([1, 2, 3])),
+                5 * 25
+            ))
+        ]);
+    });
+
     it('supports reject none', function() {
         const p = async.reject([1, 2, 3], () => false);
 
@@ -170,10 +188,10 @@ describe('reject', function() {
         arr.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal([4, 3, 2]),
+            p.should.eventually.deep.equal([3, 2]),
             p.then(() => arr.should.deep.equal([3, 2])),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([4, 1, 2, 3])),
+                () => resolve(order.should.deep.equal([2, 3])),
                 5 * 25
             ))
         ]);

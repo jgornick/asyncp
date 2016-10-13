@@ -127,6 +127,23 @@ describe('someSeries', function() {
         });
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [3, 2, 1];
+        const p = async.someSeries(
+            new Promise(resolve => setTimeout(resolve.bind(null, arr), 25)),
+            iterateeDelayWithOrder(order, (x) => x == 1)
+        );
+
+        return Promise.all([
+            p.should.eventually.equal(true),
+            new Promise(resolve => setTimeout(
+                () => resolve(order.should.deep.equal(arr)),
+                8 * 25
+            ))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.someSeries([], () => assert(false, 'iteratee should not be called'));
 
@@ -144,14 +161,14 @@ describe('someSeries', function() {
                     setTimeout(
                         () => {
                             order.push(value);
-                            resolve(value < 2);
+                            resolve(value < 3);
                         },
                         value * 25
                     );
                 });
             } else {
                 order.push(value);
-                return Promise.resolve(value < 2);
+                return Promise.resolve(value < 3);
             }
         });
 
@@ -162,7 +179,7 @@ describe('someSeries', function() {
             p.should.eventually.equal(true),
             p.then(() => arr.should.deep.equal([3, 2])),
             new Promise(resolve => setTimeout(
-                () => resolve(order.should.deep.equal([4, 3, 2, 1])),
+                () => resolve(order.should.deep.equal([3, 2])),
                 11 * 25
             ))
         ]);
