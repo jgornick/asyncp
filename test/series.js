@@ -30,6 +30,39 @@ describe('series', function() {
         ]);
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const tasks = [
+            (arg0, arg1) => new Promise(resolve => setTimeout(_ => {
+                order.push(1);
+                arg0.should.equal(0, 'assertion failed for series task arguments');
+                arg1.should.equal(1, 'assertion failed for series task arguments');
+                resolve(arg1)
+            }, 25)),
+            (arg0, arg1) => {
+                order.push(2);
+                arg0.should.equal(0, 'assertion failed for series task arguments');
+                arg1.should.equal(1, 'assertion failed for series task arguments');
+                return new Promise(resolve => resolve([1 + arg1, 2 + arg1]))
+            },
+            (arg0, arg1) => {
+                order.push(3);
+                arg0.should.equal(0, 'assertion failed for series task arguments');
+                arg1.should.equal(1, 'assertion failed for series task arguments');
+                return 1 + arg0 + arg1;
+            }
+        ];
+        const p = async.series(
+            new Promise(resolve => setTimeout(resolve.bind(null, tasks), 25)),
+            Promise.resolve(0),
+            Promise.resolve(1)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal([1, [2, 3], 2]),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
+    });
+
     it('supports empty collections', function() {
         const p = async.series([]);
         return Promise.all([
