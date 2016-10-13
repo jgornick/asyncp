@@ -31,7 +31,7 @@ describe('filterSeries', function() {
             p.then(() => arr.should.deep.equal([3, 2, 1])),
             new Promise(resolve => setTimeout(
                 () => resolve(order.should.deep.equal(arr)),
-                7 * 25
+                8 * 25
             ))
         ]);
     });
