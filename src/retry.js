@@ -1,8 +1,9 @@
 import isPlainObject from './isPlainObject';
 import tryFn from './tryFn';
+import promised from './promised';
 import PromiseBreak from './promiseBreak';
 
-export default function retry(opts, ...args) {
+export default promised(function retry(opts, ...args) {
     let task;
 
     if (typeof opts == 'function') {
@@ -71,4 +72,4 @@ export default function retry(opts, ...args) {
                 }
                 throw error;
             });
-};
+});
