@@ -1,6 +1,7 @@
 import tryFn from './tryFn';
+import promised from './promised';
 
-export default function whilst(condition, task, ...args) {
+export default promised(function whilst(condition, task, ...args) {
     return tryFn(condition, ...args)
         .then((conditionResult) => {
             return conditionResult
@@ -12,4 +13,4 @@ export default function whilst(condition, task, ...args) {
                     )
                 : Promise.resolve();
         });
-};
+});
