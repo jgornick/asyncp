@@ -76,6 +76,25 @@ describe('parallel', function() {
         ]);
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const arr = [1, 3, 2];
+        const tasks = arr.map(indexValue =>
+            delayedWithOrder(order, indexValue, (value, index) => {
+                value.should.equal(0);
+                return index;
+            })
+        );
+        const p = async.parallel(
+            new Promise(resolve => setTimeout(resolve.bind(null, tasks), 25)),
+            Promise.resolve(0)
+        );
+        return Promise.all([
+            p.should.eventually.deep.equal(arr),
+            p.then(() => order.should.deep.equal([1, 2, 3]))
+        ]);
+    });
+
     it('supports empty tasks', function() {
         const p = async.parallel([], () => assert(false, 'iteratee should not be called'));
 
@@ -120,9 +139,9 @@ describe('parallel', function() {
         tasks.shift();
 
         return Promise.all([
-            p.should.eventually.deep.equal(arr),
+            p.should.eventually.deep.equal([3, 2]),
             p.then(() => tasks.should.have.length(2)),
-            p.then(() => order.should.deep.equal([4, 1, 2, 3]))
+            p.then(() => order.should.deep.equal([2, 3]))
         ]);
     });
 
