@@ -70,4 +70,31 @@ describe('forever', function() {
         ]);
     });
 
+    it('supports promised arguments', function() {
+        let order = [];
+        const p = async.forever(
+            new Promise(resolve => setTimeout(
+                resolve.bind(
+                    null,
+                    count => new Promise((resolve, reject) => setTimeout(_ => {
+                        order.push(`task${count}`);
+                        if (count == 25) {
+                            reject(new Error(count));
+                        } else {
+                            resolve(++count);
+                        }
+                    }, 25))
+                ),
+                25
+            )),
+            Promise.resolve(0)
+        );
+
+        return Promise.all([
+            p.should.eventually.be.rejectedWith(Error),
+            p.catch(() => order.should.deep.equal(
+                new Array(26).fill(null).map((_, index) => `task${index}`)
+            ))
+        ]);
+    });
 });
